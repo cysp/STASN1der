@@ -86,54 +86,23 @@ inline bool STASNoneIdentifierIsValid(struct STASNoneIdentifier identifier) {
 	return STASNoneIdentifierValidate(identifier) == STASNoneIdentifierValid;
 }
 
-inline bool STASNoneIdentifierIsSupported(struct STASNoneIdentifier identifier) {
-	switch (identifier.class) {
-		case STASNoneIdentifierClassPrivate:
-		case STASNoneIdentifierClassApplication:
-		case STASNoneIdentifierClassContextSpecific:
-			return false;
-		case STASNoneIdentifierClassUniversal:
-			break;
-	}
 
-	switch (identifier.tag) {
-		case STASNoneIdentifierTagEOC:
-			return !identifier.constructed;
-
-		case STASNoneIdentifierTagBITSTRING:
-		case STASNoneIdentifierTagBMPSTRING:
-		case STASNoneIdentifierTagBOOLEAN:
-		case STASNoneIdentifierTagCHARACTERSTRING:
-		case STASNoneIdentifierTagEMBEDDEDPDV:
-		case STASNoneIdentifierTagENUMERATED:
-		case STASNoneIdentifierTagEXTERNAL:
-		case STASNoneIdentifierTagGENERALIZEDTIME:
-		case STASNoneIdentifierTagGENERALSTRING:
-		case STASNoneIdentifierTagGRAPHICSTRING:
-		case STASNoneIdentifierTagIA5STRING:
-		case STASNoneIdentifierTagINTEGER:
-		case STASNoneIdentifierTagNULL:
-		case STASNoneIdentifierTagNUMERICSTRING:
-		case STASNoneIdentifierTagOBJECTDESCRIPTOR:
-		case STASNoneIdentifierTagOBJECTIDENTIFIER:
-		case STASNoneIdentifierTagOCTETSTRING:
-		case STASNoneIdentifierTagPRINTABLESTRING:
-		case STASNoneIdentifierTagREAL:
-		case STASNoneIdentifierTagRELATIVEOID:
-		case STASNoneIdentifierTagSEQUENCE:
-		case STASNoneIdentifierTagSET:
-		case STASNoneIdentifierTagT61STRING:
-		case STASNoneIdentifierTagUNIVERSALSTRING:
-		case STASNoneIdentifierTagUSELONGFORM:
-		case STASNoneIdentifierTagUTCTIME:
-		case STASNoneIdentifierTagUTF8STRING:
-		case STASNoneIdentifierTagVIDEOTEXSTRING:
-		case STASNoneIdentifierTagVISIBLESTRING:
-			return false;
-	}
-
-	return false;
+@interface STASNoneObject ()
+- (id)initWithIdentifier:(struct STASNoneIdentifier)identifier content:(NSData *)content;
+@end
+@implementation STASNoneObject
+- (id)init {
+	[self doesNotRecognizeSelector:_cmd];
+	return nil;
 }
+- (id)initWithIdentifier:(struct STASNoneIdentifier)identifier content:(NSData *)content {
+	if ((self = [super init])) {
+		_identifier = identifier;
+		_content = [content copy];
+	}
+	return self;
+}
+@end
 
 
 @implementation STASNoneParser
@@ -169,12 +138,6 @@ inline bool STASNoneIdentifierIsSupported(struct STASNoneIdentifier identifier) 
 					*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorIdentifierInvalid userInfo:nil];
 				}
 				return nil;
-		}
-		if (!STASNoneIdentifierIsSupported(identifier)) {
-			if (error) {
-				*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorIdentifierUnsupported userInfo:nil];
-			}
-			return nil;
 		}
 
 		if (data_i > data_len) {
@@ -222,10 +185,9 @@ inline bool STASNoneIdentifierIsSupported(struct STASNoneIdentifier identifier) 
 			} break;
 
 			default: { //TODO
-				if (error) {
-					*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
-				}
-				return nil;
+				NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
+				id object = [[STASNoneObject alloc] initWithIdentifier:identifier content:contentData];
+				[objects addObject:object];
 			} break;
 		}
 	}

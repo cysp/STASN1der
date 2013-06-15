@@ -7,7 +7,6 @@ extern NSString * const STASNoneErrorDomain;
 typedef NS_ENUM(NSUInteger, STASNoneErrorCode) {
 	STASNoneErrorUnknown = 0,
 	STASNoneErrorIdentifierInvalid,
-	STASNoneErrorIdentifierUnsupported,
 	STASNoneErrorUnexpectedEOD,
 };
 
@@ -70,7 +69,12 @@ enum STASNoneIdentifierValidity {
 };
 extern inline enum STASNoneIdentifierValidity STASNoneIdentifierValidate(struct STASNoneIdentifier identifier);
 extern inline bool STASNoneIdentifierIsValid(struct STASNoneIdentifier identifier);
-extern inline bool STASNoneIdentifierIsSupported(struct STASNoneIdentifier identifier);
+
+
+@interface STASNoneObject : NSObject
+@property (nonatomic,assign,readonly) struct STASNoneIdentifier identifier;
+@property (nonatomic,strong,readonly) NSData *content;
+@end
 
 
 @interface STASNoneParser : NSObject
