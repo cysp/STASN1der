@@ -184,6 +184,127 @@ inline bool STASNoneIdentifierIsValid(struct STASNoneIdentifier identifier) {
 				}
 			} break;
 
+			case STASNoneIdentifierTagNULL: {
+				if (content_len != 0) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				[objects addObject:[NSNull null]];
+			} break;
+
+			case STASNoneIdentifierTagBOOLEAN: {
+				if (content_len != 1) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				bool value = content_bytes[0];
+				[objects addObject:@(value)];
+			} break;
+
+			case STASNoneIdentifierTagINTEGER:
+			case STASNoneIdentifierTagENUMERATED: {
+				if (content_len == 0) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				long long value = 0;
+				if (content_len > sizeof(value)) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				bool const is_negative = content_bytes[0] & 0x80;
+				if (is_negative) {
+					value = -1;
+				}
+				for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
+					value <<= 8;
+					value |= content_bytes[content_i];
+				}
+				[objects addObject:@(value)];
+			} break;
+
+			case STASNoneIdentifierTagOCTETSTRING: {
+				if (identifier.constructed) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				id object = [[NSData alloc] initWithBytes:content_bytes length:content_len];
+				[objects addObject:object];
+			} break;
+
+			case STASNoneIdentifierTagIA5STRING:
+			case STASNoneIdentifierTagNUMERICSTRING:
+			case STASNoneIdentifierTagPRINTABLESTRING:
+			case STASNoneIdentifierTagVISIBLESTRING: {
+				if (identifier.constructed) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSASCIIStringEncoding];
+				[objects addObject:object];
+			} break;
+
+			case STASNoneIdentifierTagUTF8STRING: {
+				if (identifier.constructed) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSUTF8StringEncoding];
+				[objects addObject:object];
+			} break;
+
+			case STASNoneIdentifierTagSEQUENCE: {
+				if (!identifier.constructed) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
+				NSError *err = nil;
+				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
+				if (!subobjects) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				[objects addObject:subobjects];
+			} break;
+
+			case STASNoneIdentifierTagSET: {
+				if (!identifier.constructed) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
+				NSError *err = nil;
+				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
+				if (!subobjects) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASNoneErrorDomain code:STASNoneErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				[objects addObject:[NSSet setWithArray:subobjects]];
+			} break;
+
 			default: { //TODO
 				NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
 				id object = [[STASNoneObject alloc] initWithIdentifier:identifier content:contentData];
