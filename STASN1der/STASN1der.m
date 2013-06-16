@@ -102,6 +102,9 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 	}
 	return self;
 }
+- (NSString *)description {
+	return [NSString stringWithFormat:@"<%@: %p %d.%c.%d %@>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag, _content];
+}
 @end
 
 
