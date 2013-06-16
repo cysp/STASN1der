@@ -147,6 +147,7 @@ inline bool STASNoneIdentifierIsValid(struct STASNoneIdentifier identifier) {
 			return nil;
 		}
 
+		// TODO content lengths > 0x7f
 		unsigned char content_length_byte = data_bytes[data_i++];
 		if (content_length_byte & 0x80) {
 			if (error) {
