@@ -40,7 +40,7 @@ inline enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN
 			return identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
 
 		case STASN1derIdentifierTagOBJECTDESCRIPTOR:
-			return true;
+			return STASN1derIdentifierValid;
 
 		case STASN1derIdentifierTagEXTERNAL:
 			return identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
@@ -175,35 +175,28 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 			return nil;
 		}
 
-		switch (identifier.tag) {
+		bool handled = false;
+
+		if (identifier.class == STASN1derIdentifierClassUniversal) switch (identifier.tag) {
 			case STASN1derIdentifierTagEOC: {
-				if (content_len != 0) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (content_len == 0) {
+					handled = true;
 				}
 			} break;
 
 			case STASN1derIdentifierTagNULL: {
-				if (content_len != 0) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (content_len == 0) {
+					[objects addObject:[NSNull null]];
+					handled = true;
 				}
-				[objects addObject:[NSNull null]];
 			} break;
 
 			case STASN1derIdentifierTagBOOLEAN: {
-				if (content_len != 1) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (content_len == 1) {
+					bool value = content_bytes[0];
+					[objects addObject:@(value)];
+					handled = true;
 				}
-				bool value = content_bytes[0];
-				[objects addObject:@(value)];
 			} break;
 
 			case STASN1derIdentifierTagINTEGER:
@@ -230,87 +223,64 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 					value |= content_bytes[content_i];
 				}
 				[objects addObject:@(value)];
+				handled = true;
 			} break;
 
 			case STASN1derIdentifierTagOCTETSTRING: {
-				if (identifier.constructed) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (!identifier.constructed) {
+					id object = [[NSData alloc] initWithBytes:content_bytes length:content_len];
+					[objects addObject:object];
+					handled = true;
 				}
-				id object = [[NSData alloc] initWithBytes:content_bytes length:content_len];
-				[objects addObject:object];
 			} break;
 
 			case STASN1derIdentifierTagIA5STRING:
 			case STASN1derIdentifierTagNUMERICSTRING:
 			case STASN1derIdentifierTagPRINTABLESTRING:
 			case STASN1derIdentifierTagVISIBLESTRING: {
-				if (identifier.constructed) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (!identifier.constructed) {
+					id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSASCIIStringEncoding];
+					[objects addObject:object];
+					handled = true;
 				}
-				id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSASCIIStringEncoding];
-				[objects addObject:object];
 			} break;
 
 			case STASN1derIdentifierTagUTF8STRING: {
-				if (identifier.constructed) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (!identifier.constructed) {
+					id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSUTF8StringEncoding];
+					[objects addObject:object];
+					handled = true;
 				}
-				id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSUTF8StringEncoding];
-				[objects addObject:object];
 			} break;
 
 			case STASN1derIdentifierTagSEQUENCE: {
-				if (!identifier.constructed) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
-				}
 				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
 				NSError *err = nil;
 				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
-				if (!subobjects) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (subobjects) {
+					[objects addObject:subobjects];
+					handled = true;
 				}
-				[objects addObject:subobjects];
 			} break;
 
 			case STASN1derIdentifierTagSET: {
-				if (!identifier.constructed) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
-				}
 				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
 				NSError *err = nil;
 				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
-				if (!subobjects) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
+				if (subobjects) {
+					[objects addObject:[NSSet setWithArray:subobjects]];
+					handled = true;
 				}
-				[objects addObject:[NSSet setWithArray:subobjects]];
 			} break;
 
 			default: { //TODO
-				NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
-				id object = [[STASN1derObject alloc] initWithIdentifier:identifier content:contentData];
-				[objects addObject:object];
 			} break;
+		}
+
+		if (!handled) {
+			NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
+			id object = [[STASN1derObject alloc] initWithIdentifier:identifier content:contentData];
+			[objects addObject:object];
 		}
 	}
 
