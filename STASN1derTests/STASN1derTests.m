@@ -96,6 +96,83 @@
 	}
 }
 
+- (void)testParseContentLength {
+	{
+		char input_bytes[] = "\x02\x81\x01\xff";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+		id const expected = [NSNumber numberWithInteger:-1];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		XCTAssertNotNil(output, @"error: %@", error);
+		if (output) {
+			XCTAssertEqualObjects(output, expected, @"");
+		}
+	}
+
+	{
+		char input_bytes[] = "\x02\x81";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		XCTAssertNil(output, @"error: %@", error);
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+	}
+
+	{
+		char input_bytes[] = "\x02\x81\x01";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		XCTAssertNil(output, @"error: %@", error);
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+	}
+
+	{
+		char input_bytes[] = "\x02\x81\x02\xff";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		XCTAssertNil(output, @"error: %@", error);
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+	}
+
+	{
+		char input_bytes[] = "\x02\x82\x00\x01\xff";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+		id const expected = [NSNumber numberWithInteger:-1];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		XCTAssertNotNil(output, @"error: %@", error);
+		if (output) {
+			XCTAssertEqualObjects(output, expected, @"");
+		}
+	}
+
+	{
+		char input_bytes[] = "\x02\x82\x00\x01\xff\x01\x01\x00";
+		unsigned long const input_len = sizeof(input_bytes) - 1;
+		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
+		id const expected = @[ [NSNumber numberWithInteger:-1], @NO ];
+
+		NSError *error = nil;
+		id const output = [STASN1derParser objectsFromASN1Data:inputData error:&error];
+		XCTAssertNotNil(output, @"error: %@", error);
+		if (output) {
+			XCTAssertEqualObjects(output, expected, @"");
+		}
+	}
+}
+
 - (void)testParseNULL {
 	{
 		char input_bytes[] = "\x05\x00";

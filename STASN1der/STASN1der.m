@@ -150,11 +150,42 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 			return nil;
 		}
 
-		// TODO content lengths > 0x7f
+		unsigned long content_len = 0;
+		bool content_len_indefinite = false;
+
 		unsigned char content_length_byte = data_bytes[data_i++];
 		if (content_length_byte & 0x80) {
+			unsigned char content_length_len = content_length_byte & 0x7f;
+			if (content_length_len == 0) {
+				content_len_indefinite = true;
+			} else {
+				if (content_length_len > sizeof(content_len)) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
+					}
+					return nil;
+				}
+				if (data_i + content_length_len > data_len) {
+					if (error) {
+						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
+					}
+					return nil;
+				}
+				unsigned char const *content_length_bytes = &data_bytes[data_i];
+				data_i += content_length_len;
+				for (unsigned int content_length_i = 0; content_length_i < content_length_len; ++content_length_i) {
+					content_len <<= 8;
+					content_len |= content_length_bytes[content_length_i];
+				}
+			}
+		} else {
+			content_len = content_length_byte;
+		}
+
+		// TODO support indefinite content lengths
+		if (content_len_indefinite) {
 			if (error) {
-				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
+				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnsupported userInfo:nil];
 			}
 			return nil;
 		}
@@ -167,8 +198,6 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 		}
 
 		unsigned char const *content_bytes = &data_bytes[data_i];
-		unsigned long content_len = content_length_byte;
-		(void)content_bytes;
 
 		data_i += content_len;
 		if (data_i > data_len) {

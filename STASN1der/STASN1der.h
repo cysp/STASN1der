@@ -6,6 +6,7 @@
 extern NSString * const STASN1derErrorDomain;
 typedef NS_ENUM(NSUInteger, STASN1derErrorCode) {
 	STASN1derErrorUnknown = 0,
+	STASN1derErrorUnsupported,
 	STASN1derErrorIdentifierInvalid,
 	STASN1derErrorUnexpectedEOD,
 };
