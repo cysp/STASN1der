@@ -2,57 +2,57 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STASNone.h"
+#import "STASN1der.h"
 
 
-@interface STASNoneTests : XCTestCase
+@interface STASN1derTests : XCTestCase
 @end
 
-@implementation STASNoneTests
+@implementation STASN1derTests
 
 - (void)testIdentifierExtraction {
 	struct identifier_testcase {
 		unsigned char const input;
-		struct STASNoneIdentifier const expected;
-		enum STASNoneIdentifierValidity const validity;
+		struct STASN1derIdentifier const expected;
+		enum STASN1derIdentifierValidity const validity;
 	} const testcases[] = {
 		{
 			.input = 0x00,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = false, .tag = STASNoneIdentifierTagEOC },
-			.validity = STASNoneIdentifierValid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = false, .tag = STASN1derIdentifierTagEOC },
+			.validity = STASN1derIdentifierValid,
 		},
 		{
 			.input = 0x20,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = true, .tag = STASNoneIdentifierTagEOC },
-			.validity = STASNoneIdentifierInvalid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = true, .tag = STASN1derIdentifierTagEOC },
+			.validity = STASN1derIdentifierInvalid,
 		},
 		{
 			.input = 0x01,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = false, .tag = STASNoneIdentifierTagBOOLEAN },
-			.validity = STASNoneIdentifierValid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = false, .tag = STASN1derIdentifierTagBOOLEAN },
+			.validity = STASN1derIdentifierValid,
 		},
 		{
 			.input = 0x02,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = false, .tag = STASNoneIdentifierTagINTEGER },
-			.validity = STASNoneIdentifierValid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = false, .tag = STASN1derIdentifierTagINTEGER },
+			.validity = STASN1derIdentifierValid,
 		},
 		{
 			.input = 0x10,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = false, .tag = STASNoneIdentifierTagSEQUENCE },
-			.validity = STASNoneIdentifierInvalid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = false, .tag = STASN1derIdentifierTagSEQUENCE },
+			.validity = STASN1derIdentifierInvalid,
 		},
 		{
 			.input = 0x30,
-			.expected = { .class = STASNoneIdentifierClassUniversal, .constructed = true, .tag = STASNoneIdentifierTagSEQUENCE },
-			.validity = STASNoneIdentifierValid,
+			.expected = { .class = STASN1derIdentifierClassUniversal, .constructed = true, .tag = STASN1derIdentifierTagSEQUENCE },
+			.validity = STASN1derIdentifierValid,
 		},
 	};
 	unsigned int const ntestcases = sizeof(testcases) / sizeof(testcases[0]);
 
 	for (unsigned int i = 0; i < ntestcases; ++i) {
 		struct identifier_testcase testcase = testcases[i];
-		struct STASNoneIdentifier const output = STASNoneIdentifierFromChar(testcase.input);
-		enum STASNoneIdentifierValidity const validity = STASNoneIdentifierValidate(output);
+		struct STASN1derIdentifier const output = STASN1derIdentifierFromChar(testcase.input);
+		enum STASN1derIdentifierValidity const validity = STASN1derIdentifierValidate(output);
 
 		bool equal = !memcmp(&testcase.expected, &output, sizeof(testcase.expected));
 		XCTAssertTrue(equal, @"");
@@ -68,9 +68,9 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASNoneErrorUnexpectedEOD, @"");
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -79,9 +79,9 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASNoneErrorUnexpectedEOD, @"");
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -90,9 +90,9 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASNoneErrorUnexpectedEOD, @"");
+		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 }
 
@@ -104,7 +104,7 @@
 		id const expected = [NSNull null];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -120,7 +120,7 @@
 		id const expected = [NSNumber numberWithBool:0];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -133,7 +133,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 		id const expected = [NSNumber numberWithBool:1];
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -147,7 +147,7 @@
 		id const expected = [NSNumber numberWithBool:1];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -163,7 +163,7 @@
 		id const expected = [NSNumber numberWithInteger:-1];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -177,7 +177,7 @@
 		id const expected = [NSNumber numberWithInteger:-2];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -195,7 +195,7 @@
 		id const expected = [[NSData alloc] initWithBytesNoCopy:expected_bytes length:expected_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -211,7 +211,7 @@
 		id const expected = @"Hello";
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -227,7 +227,7 @@
 		id const expected = @"Hello";
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -243,7 +243,7 @@
 		id const expected = @[ @NO ];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -257,7 +257,7 @@
 		id const expected = @[ @YES ];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -271,7 +271,7 @@
 		id const expected = @[ @NO, @YES ];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");
@@ -285,7 +285,7 @@
 		id const expected = @[ @"Smith", @YES ];
 
 		NSError *error = nil;
-		id const output = [STASNoneParser objectFromASN1Data:inputData error:&error];
+		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
 			XCTAssertEqualObjects(output, expected, @"");

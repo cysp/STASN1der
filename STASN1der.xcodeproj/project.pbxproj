@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C24D3BA17676FFF0005B30C /* STASNone.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C24D3B917676FFF0005B30C /* STASNone.h */; };
-		2C24D3BC17676FFF0005B30C /* STASNone.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3BB17676FFF0005B30C /* STASNone.m */; };
+		2C24D3BA17676FFF0005B30C /* STASN1der.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C24D3B917676FFF0005B30C /* STASN1der.h */; };
+		2C24D3BC17676FFF0005B30C /* STASN1der.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3BB17676FFF0005B30C /* STASN1der.m */; };
 		2C24D3C3176770000005B30C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3C2176770000005B30C /* XCTest.framework */; };
 		2C24D3C4176770000005B30C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3B417676FFF0005B30C /* Foundation.framework */; };
-		2C24D3C9176770000005B30C /* libSTASNone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3B117676FFF0005B30C /* libSTASNone.a */; };
-		2C24D3D1176770000005B30C /* STASNoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3D0176770000005B30C /* STASNoneTests.m */; };
+		2C24D3C9176770000005B30C /* libSTASN1der.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3B117676FFF0005B30C /* libSTASN1der.a */; };
+		2C24D3D1176770000005B30C /* STASN1derTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3D0176770000005B30C /* STASN1derTests.m */; };
 		2C24D460176B10A90005B30C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3C2176770000005B30C /* XCTest.framework */; };
-		2C24D464176B10A90005B30C /* libSTASNone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D44E176B10A90005B30C /* libSTASNone.a */; };
-		2C24D473176B13BB0005B30C /* STASNoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3D0176770000005B30C /* STASNoneTests.m */; };
-		2C24D474176B13C30005B30C /* STASNone.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3BB17676FFF0005B30C /* STASNone.m */; };
+		2C24D464176B10A90005B30C /* libSTASN1der.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D44E176B10A90005B30C /* libSTASN1der.a */; };
+		2C24D473176B13BB0005B30C /* STASN1derTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3D0176770000005B30C /* STASN1derTests.m */; };
+		2C24D474176B13C30005B30C /* STASN1der.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3BB17676FFF0005B30C /* STASN1der.m */; };
 		2C24D475176B13D80005B30C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3B417676FFF0005B30C /* Foundation.framework */; };
-		2C24D476176B151C0005B30C /* STASNone.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C24D3B917676FFF0005B30C /* STASNone.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2C24D476176B151C0005B30C /* STASN1der.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C24D3B917676FFF0005B30C /* STASN1der.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,14 +27,14 @@
 			containerPortal = 2C24D3A917676FFF0005B30C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2C24D3B017676FFF0005B30C;
-			remoteInfo = STASNone;
+			remoteInfo = STASN1der;
 		};
 		2C24D462176B10A90005B30C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2C24D3A917676FFF0005B30C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2C24D44D176B10A90005B30C;
-			remoteInfo = STASNone;
+			remoteInfo = STASN1der;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -45,23 +45,23 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				2C24D3BA17676FFF0005B30C /* STASNone.h in CopyFiles */,
+				2C24D3BA17676FFF0005B30C /* STASN1der.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2C24D3B117676FFF0005B30C /* libSTASNone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASNone.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C24D3B117676FFF0005B30C /* libSTASN1der.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASN1der.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C24D3B417676FFF0005B30C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		2C24D3B917676FFF0005B30C /* STASNone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STASNone.h; sourceTree = "<group>"; };
-		2C24D3BB17676FFF0005B30C /* STASNone.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASNone.m; sourceTree = "<group>"; };
-		2C24D3C1176770000005B30C /* STASNoneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STASNoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C24D3B917676FFF0005B30C /* STASN1der.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STASN1der.h; sourceTree = "<group>"; };
+		2C24D3BB17676FFF0005B30C /* STASN1der.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASN1der.m; sourceTree = "<group>"; };
+		2C24D3C1176770000005B30C /* STASN1derTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STASN1derTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C24D3C2176770000005B30C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2C24D3CC176770000005B30C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C24D3D0176770000005B30C /* STASNoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASNoneTests.m; sourceTree = "<group>"; };
-		2C24D44E176B10A90005B30C /* libSTASNone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASNone.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C24D45F176B10A90005B30C /* STASNoneTests.xctest */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = STASNoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C24D3D0176770000005B30C /* STASN1derTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASN1derTests.m; sourceTree = "<group>"; };
+		2C24D44E176B10A90005B30C /* libSTASN1der.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASN1der.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C24D45F176B10A90005B30C /* STASN1derTests.xctest */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = STASN1derTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +78,7 @@
 			files = (
 				2C24D3C4176770000005B30C /* Foundation.framework in Frameworks */,
 				2C24D3C3176770000005B30C /* XCTest.framework in Frameworks */,
-				2C24D3C9176770000005B30C /* libSTASNone.a in Frameworks */,
+				2C24D3C9176770000005B30C /* libSTASN1der.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +95,7 @@
 			files = (
 				2C24D475176B13D80005B30C /* Foundation.framework in Frameworks */,
 				2C24D460176B10A90005B30C /* XCTest.framework in Frameworks */,
-				2C24D464176B10A90005B30C /* libSTASNone.a in Frameworks */,
+				2C24D464176B10A90005B30C /* libSTASN1der.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,8 +105,8 @@
 		2C24D3A817676FFF0005B30C = {
 			isa = PBXGroup;
 			children = (
-				2C24D3B617676FFF0005B30C /* STASNone */,
-				2C24D3CA176770000005B30C /* STASNoneTests */,
+				2C24D3B617676FFF0005B30C /* STASN1der */,
+				2C24D3CA176770000005B30C /* STASN1derTests */,
 				2C24D3B317676FFF0005B30C /* Frameworks */,
 				2C24D3B217676FFF0005B30C /* Products */,
 			);
@@ -115,10 +115,10 @@
 		2C24D3B217676FFF0005B30C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2C24D3B117676FFF0005B30C /* libSTASNone.a */,
-				2C24D3C1176770000005B30C /* STASNoneTests.xctest */,
-				2C24D44E176B10A90005B30C /* libSTASNone.a */,
-				2C24D45F176B10A90005B30C /* STASNoneTests.xctest */,
+				2C24D3B117676FFF0005B30C /* libSTASN1der.a */,
+				2C24D3C1176770000005B30C /* STASN1derTests.xctest */,
+				2C24D44E176B10A90005B30C /* libSTASN1der.a */,
+				2C24D45F176B10A90005B30C /* STASN1derTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,22 +132,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2C24D3B617676FFF0005B30C /* STASNone */ = {
+		2C24D3B617676FFF0005B30C /* STASN1der */ = {
 			isa = PBXGroup;
 			children = (
-				2C24D3B917676FFF0005B30C /* STASNone.h */,
-				2C24D3BB17676FFF0005B30C /* STASNone.m */,
+				2C24D3B917676FFF0005B30C /* STASN1der.h */,
+				2C24D3BB17676FFF0005B30C /* STASN1der.m */,
 			);
-			path = STASNone;
+			path = STASN1der;
 			sourceTree = "<group>";
 		};
-		2C24D3CA176770000005B30C /* STASNoneTests */ = {
+		2C24D3CA176770000005B30C /* STASN1derTests */ = {
 			isa = PBXGroup;
 			children = (
 				2C24D3CC176770000005B30C /* Info.plist */,
-				2C24D3D0176770000005B30C /* STASNoneTests.m */,
+				2C24D3D0176770000005B30C /* STASN1derTests.m */,
 			);
-			path = STASNoneTests;
+			path = STASN1derTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,16 +157,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C24D476176B151C0005B30C /* STASNone.h in Headers */,
+				2C24D476176B151C0005B30C /* STASN1der.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		2C24D3B017676FFF0005B30C /* STASNone-iOS */ = {
+		2C24D3B017676FFF0005B30C /* STASN1der-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C24D3D4176770000005B30C /* Build configuration list for PBXNativeTarget "STASNone-iOS" */;
+			buildConfigurationList = 2C24D3D4176770000005B30C /* Build configuration list for PBXNativeTarget "STASN1der-iOS" */;
 			buildPhases = (
 				2C24D3AD17676FFF0005B30C /* Sources */,
 				2C24D3AE17676FFF0005B30C /* Frameworks */,
@@ -176,14 +176,14 @@
 			);
 			dependencies = (
 			);
-			name = "STASNone-iOS";
-			productName = STASNone;
-			productReference = 2C24D3B117676FFF0005B30C /* libSTASNone.a */;
+			name = "STASN1der-iOS";
+			productName = STASN1der;
+			productReference = 2C24D3B117676FFF0005B30C /* libSTASN1der.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2C24D3C0176770000005B30C /* STASNoneTests-iOS */ = {
+		2C24D3C0176770000005B30C /* STASN1derTests-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C24D3D7176770000005B30C /* Build configuration list for PBXNativeTarget "STASNoneTests-iOS" */;
+			buildConfigurationList = 2C24D3D7176770000005B30C /* Build configuration list for PBXNativeTarget "STASN1derTests-iOS" */;
 			buildPhases = (
 				2C24D3BD176770000005B30C /* Sources */,
 				2C24D3BE176770000005B30C /* Frameworks */,
@@ -194,14 +194,14 @@
 			dependencies = (
 				2C24D3C8176770000005B30C /* PBXTargetDependency */,
 			);
-			name = "STASNoneTests-iOS";
-			productName = STASNoneTests;
-			productReference = 2C24D3C1176770000005B30C /* STASNoneTests.xctest */;
+			name = "STASN1derTests-iOS";
+			productName = STASN1derTests;
+			productReference = 2C24D3C1176770000005B30C /* STASN1derTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		2C24D44D176B10A90005B30C /* STASNone-mac */ = {
+		2C24D44D176B10A90005B30C /* STASN1der-mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C24D46D176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASNone-mac" */;
+			buildConfigurationList = 2C24D46D176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASN1der-mac" */;
 			buildPhases = (
 				2C24D44A176B10A90005B30C /* Sources */,
 				2C24D44B176B10A90005B30C /* Frameworks */,
@@ -211,14 +211,14 @@
 			);
 			dependencies = (
 			);
-			name = "STASNone-mac";
-			productName = STASNone;
-			productReference = 2C24D44E176B10A90005B30C /* libSTASNone.a */;
+			name = "STASN1der-mac";
+			productName = STASN1der;
+			productReference = 2C24D44E176B10A90005B30C /* libSTASN1der.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2C24D45E176B10A90005B30C /* STASNoneTests-mac */ = {
+		2C24D45E176B10A90005B30C /* STASN1derTests-mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2C24D470176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASNoneTests-mac" */;
+			buildConfigurationList = 2C24D470176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASN1derTests-mac" */;
 			buildPhases = (
 				2C24D45B176B10A90005B30C /* Sources */,
 				2C24D45C176B10A90005B30C /* Frameworks */,
@@ -229,9 +229,9 @@
 			dependencies = (
 				2C24D463176B10A90005B30C /* PBXTargetDependency */,
 			);
-			name = "STASNoneTests-mac";
-			productName = STASNoneTests;
-			productReference = 2C24D45F176B10A90005B30C /* STASNoneTests.xctest */;
+			name = "STASN1derTests-mac";
+			productName = STASN1derTests;
+			productReference = 2C24D45F176B10A90005B30C /* STASN1derTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -243,7 +243,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Scott Talbot";
 			};
-			buildConfigurationList = 2C24D3AC17676FFF0005B30C /* Build configuration list for PBXProject "STASNone" */;
+			buildConfigurationList = 2C24D3AC17676FFF0005B30C /* Build configuration list for PBXProject "STASN1der" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -255,10 +255,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2C24D3B017676FFF0005B30C /* STASNone-iOS */,
-				2C24D3C0176770000005B30C /* STASNoneTests-iOS */,
-				2C24D44D176B10A90005B30C /* STASNone-mac */,
-				2C24D45E176B10A90005B30C /* STASNoneTests-mac */,
+				2C24D3B017676FFF0005B30C /* STASN1der-iOS */,
+				2C24D3C0176770000005B30C /* STASN1derTests-iOS */,
+				2C24D44D176B10A90005B30C /* STASN1der-mac */,
+				2C24D45E176B10A90005B30C /* STASN1derTests-mac */,
 			);
 		};
 /* End PBXProject section */
@@ -285,7 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C24D3BC17676FFF0005B30C /* STASNone.m in Sources */,
+				2C24D3BC17676FFF0005B30C /* STASN1der.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C24D3D1176770000005B30C /* STASNoneTests.m in Sources */,
+				2C24D3D1176770000005B30C /* STASN1derTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C24D474176B13C30005B30C /* STASNone.m in Sources */,
+				2C24D474176B13C30005B30C /* STASN1der.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C24D473176B13BB0005B30C /* STASNoneTests.m in Sources */,
+				2C24D473176B13BB0005B30C /* STASN1derTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,12 +318,12 @@
 /* Begin PBXTargetDependency section */
 		2C24D3C8176770000005B30C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2C24D3B017676FFF0005B30C /* STASNone-iOS */;
+			target = 2C24D3B017676FFF0005B30C /* STASN1der-iOS */;
 			targetProxy = 2C24D3C7176770000005B30C /* PBXContainerItemProxy */;
 		};
 		2C24D463176B10A90005B30C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2C24D44D176B10A90005B30C /* STASNone-mac */;
+			target = 2C24D44D176B10A90005B30C /* STASN1der-mac */;
 			targetProxy = 2C24D462176B10A90005B30C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -424,10 +424,10 @@
 		2C24D3D5176770000005B30C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/STASNone.dst;
+				DSTROOT = /tmp/STASN1der.dst;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = STASNone;
+				PRODUCT_NAME = STASN1der;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -436,10 +436,10 @@
 		2C24D3D6176770000005B30C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DSTROOT = /tmp/STASNone.dst;
+				DSTROOT = /tmp/STASN1der.dst;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = STASNone;
+				PRODUCT_NAME = STASN1der;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -457,8 +457,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = STASNoneTests/Info.plist;
-				PRODUCT_NAME = STASNoneTests;
+				INFOPLIST_FILE = STASN1derTests/Info.plist;
+				PRODUCT_NAME = STASN1derTests;
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -472,8 +472,8 @@
 					"$(inherited)",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP.app/Contents/Developer/Library/Frameworks",
 				);
-				INFOPLIST_FILE = STASNoneTests/Info.plist;
-				PRODUCT_NAME = STASNoneTests;
+				INFOPLIST_FILE = STASN1derTests/Info.plist;
+				PRODUCT_NAME = STASN1derTests;
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -483,7 +483,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = STASNone;
+				PRODUCT_NAME = STASN1der;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -493,7 +493,7 @@
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = STASNone;
+				PRODUCT_NAME = STASN1der;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -512,9 +512,9 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = STASNoneTests/Info.plist;
+				INFOPLIST_FILE = STASN1derTests/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = STASNoneTests;
+				PRODUCT_NAME = STASN1derTests;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -531,9 +531,9 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				INFOPLIST_FILE = STASNoneTests/Info.plist;
+				INFOPLIST_FILE = STASN1derTests/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = STASNoneTests;
+				PRODUCT_NAME = STASN1derTests;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -542,7 +542,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2C24D3AC17676FFF0005B30C /* Build configuration list for PBXProject "STASNone" */ = {
+		2C24D3AC17676FFF0005B30C /* Build configuration list for PBXProject "STASN1der" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C24D3D2176770000005B30C /* Debug */,
@@ -551,7 +551,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C24D3D4176770000005B30C /* Build configuration list for PBXNativeTarget "STASNone-iOS" */ = {
+		2C24D3D4176770000005B30C /* Build configuration list for PBXNativeTarget "STASN1der-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C24D3D5176770000005B30C /* Debug */,
@@ -560,7 +560,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C24D3D7176770000005B30C /* Build configuration list for PBXNativeTarget "STASNoneTests-iOS" */ = {
+		2C24D3D7176770000005B30C /* Build configuration list for PBXNativeTarget "STASN1derTests-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C24D3D8176770000005B30C /* Debug */,
@@ -569,21 +569,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2C24D46D176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASNone-mac" */ = {
+		2C24D46D176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASN1der-mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C24D46E176B10A90005B30C /* Debug */,
 				2C24D46F176B10A90005B30C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		2C24D470176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASNoneTests-mac" */ = {
+		2C24D470176B10A90005B30C /* Build configuration list for PBXNativeTarget "STASN1derTests-mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2C24D471176B10A90005B30C /* Debug */,
 				2C24D472176B10A90005B30C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

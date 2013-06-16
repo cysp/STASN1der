@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C24D3B017676FFF0005B30C"
-               BuildableName = "libSTASNone.a"
-               BlueprintName = "STASNone-iOS"
-               ReferencedContainer = "container:STASNone.xcodeproj">
+               BlueprintIdentifier = "2C24D44D176B10A90005B30C"
+               BuildableName = "libSTASN1der.a"
+               BlueprintName = "STASN1der-mac"
+               ReferencedContainer = "container:STASN1der.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2C24D3C0176770000005B30C"
-               BuildableName = "STASNoneTests.xctest"
-               BlueprintName = "STASNoneTests-iOS"
-               ReferencedContainer = "container:STASNone.xcodeproj">
+               BlueprintIdentifier = "2C24D45E176B10A90005B30C"
+               BuildableName = "STASN1derTests.xctest"
+               BlueprintName = "STASN1derTests-mac"
+               ReferencedContainer = "container:STASN1der.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
