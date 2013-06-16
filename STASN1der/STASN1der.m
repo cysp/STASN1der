@@ -37,7 +37,7 @@ inline enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN
 			return !identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
 
 		case STASN1derIdentifierTagOBJECTIDENTIFIER:
-			return identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
+			return !identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
 
 		case STASN1derIdentifierTagOBJECTDESCRIPTOR:
 			return STASN1derIdentifierValid;
