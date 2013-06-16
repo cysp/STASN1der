@@ -19,6 +19,8 @@
 		2C24D474176B13C30005B30C /* STASN1der.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C24D3BB17676FFF0005B30C /* STASN1der.m */; };
 		2C24D475176B13D80005B30C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C24D3B417676FFF0005B30C /* Foundation.framework */; };
 		2C24D476176B151C0005B30C /* STASN1der.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C24D3B917676FFF0005B30C /* STASN1der.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2C2CCA49176DA76C00A58714 /* t in Resources */ = {isa = PBXBuildFile; fileRef = 2C2CCA48176DA76700A58714 /* t */; };
+		2C2CCA4A176DA76C00A58714 /* t in Resources */ = {isa = PBXBuildFile; fileRef = 2C2CCA48176DA76700A58714 /* t */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,7 @@
 		2C24D3D0176770000005B30C /* STASN1derTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASN1derTests.m; sourceTree = "<group>"; };
 		2C24D44E176B10A90005B30C /* libSTASN1der.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASN1der.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C24D45F176B10A90005B30C /* STASN1derTests.xctest */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = STASN1derTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C2CCA48176DA76700A58714 /* t */ = {isa = PBXFileReference; lastKnownFileType = folder; path = t; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +149,7 @@
 			children = (
 				2C24D3CC176770000005B30C /* Info.plist */,
 				2C24D3D0176770000005B30C /* STASN1derTests.m */,
+				2C2CCA48176DA76700A58714 /* t */,
 			);
 			path = STASN1derTests;
 			sourceTree = "<group>";
@@ -268,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2CCA4A176DA76C00A58714 /* t in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2CCA49176DA76C00A58714 /* t in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

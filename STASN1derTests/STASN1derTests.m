@@ -370,4 +370,37 @@
 	}
 }
 
+- (void)testParsePKCS7File {
+	NSBundle * const bundle = [NSBundle bundleForClass:[self class]];
+	NSURL * const url = [bundle URLForResource:@"sequence.0.signed" withExtension:nil subdirectory:@"t"];
+	NSData * const inputData = [[NSData alloc] initWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:NULL];
+
+	NSError *error = nil;
+	NSArray * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+	XCTAssertNotNil(output, @"error: %@", error);
+	XCTAssertEquals([output count], 2UL, @"");
+	if ([output count] == 2) {
+		{
+			id object1 = output[0];
+			XCTAssertTrue([object1 isKindOfClass:[STASN1derObject class]], @"");
+			if ([object1 isKindOfClass:[STASN1derObject class]]) {
+				STASN1derObject *o = object1;
+				XCTAssertEquals(o.identifier.class, STASN1derIdentifierClassUniversal, @"");
+				XCTAssertEquals(o.identifier.constructed, (bool)false, @"");
+				XCTAssertEquals(o.identifier.tag, STASN1derIdentifierTagOBJECTIDENTIFIER, @"");
+			}
+		}
+		{
+			id object2 = output[1];
+			XCTAssertTrue([object2 isKindOfClass:[STASN1derObject class]], @"");
+			if ([object2 isKindOfClass:[STASN1derObject class]]) {
+				STASN1derObject *o = object2;
+				XCTAssertEquals(o.identifier.class, STASN1derIdentifierClassContextSpecific, @"");
+				XCTAssertEquals(o.identifier.constructed, (bool)true, @"");
+				XCTAssertEquals(o.identifier.tag, (enum STASN1derIdentifierTag)0, @"");
+			}
+		}
+	}
+}
+
 @end
