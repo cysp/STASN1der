@@ -204,29 +204,21 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 
 			case STASN1derIdentifierTagINTEGER:
 			case STASN1derIdentifierTagENUMERATED: {
-				if (content_len == 0) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
+				if (content_len > 0) {
+					long long value = 0;
+					if (content_len <= sizeof(value)) {
+						bool const is_negative = content_bytes[0] & 0x80;
+						if (is_negative) {
+							value = -1;
+						}
+						for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
+							value <<= 8;
+							value |= content_bytes[content_i];
+						}
+						[objects addObject:@(value)];
+						handled = true;
 					}
-					return nil;
 				}
-				long long value = 0;
-				if (content_len > sizeof(value)) {
-					if (error) {
-						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
-					}
-					return nil;
-				}
-				bool const is_negative = content_bytes[0] & 0x80;
-				if (is_negative) {
-					value = -1;
-				}
-				for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
-					value <<= 8;
-					value |= content_bytes[content_i];
-				}
-				[objects addObject:@(value)];
-				handled = true;
 			} break;
 
 			case STASN1derIdentifierTagOCTETSTRING: {
