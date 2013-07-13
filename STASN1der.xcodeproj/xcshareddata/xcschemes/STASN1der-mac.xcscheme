@@ -20,6 +20,20 @@
                ReferencedContainer = "container:STASN1der.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2C24D45E176B10A90005B30C"
+               BuildableName = "STASN1derTests.xctest"
+               BlueprintName = "STASN1derTests-mac"
+               ReferencedContainer = "container:STASN1der.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
