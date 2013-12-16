@@ -57,7 +57,7 @@
 		bool equal = !memcmp(&testcase.expected, &output, sizeof(testcase.expected));
 		XCTAssertTrue(equal, @"");
 
-		XCTAssertEquals(testcase.validity, validity, @"");
+		XCTAssertEqual(testcase.validity, validity, @"");
 	}
 }
 
@@ -70,7 +70,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -81,7 +81,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -92,7 +92,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 }
 
@@ -119,7 +119,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -130,7 +130,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -141,7 +141,7 @@
 		NSError *error = nil;
 		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
-		XCTAssertEquals(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
+		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
 
 	{
@@ -378,16 +378,16 @@
 	NSError *error = nil;
 	NSArray * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 	XCTAssertNotNil(output, @"error: %@", error);
-	XCTAssertEquals([output count], 2UL, @"");
+	XCTAssertEqual([output count], 2UL, @"");
 	if ([output count] == 2) {
 		{
 			id object1 = output[0];
 			XCTAssertTrue([object1 isKindOfClass:[STASN1derObject class]], @"");
 			if ([object1 isKindOfClass:[STASN1derObject class]]) {
 				STASN1derObject *o = object1;
-				XCTAssertEquals(o.identifier.class, STASN1derIdentifierClassUniversal, @"");
-				XCTAssertEquals(o.identifier.constructed, (bool)false, @"");
-				XCTAssertEquals(o.identifier.tag, STASN1derIdentifierTagOBJECTIDENTIFIER, @"");
+				XCTAssertEqual(o.identifier.class, STASN1derIdentifierClassUniversal, @"");
+				XCTAssertEqual(o.identifier.constructed, (bool)false, @"");
+				XCTAssertEqual(o.identifier.tag, STASN1derIdentifierTagOBJECTIDENTIFIER, @"");
 			}
 		}
 		{
@@ -395,9 +395,9 @@
 			XCTAssertTrue([object2 isKindOfClass:[STASN1derObject class]], @"");
 			if ([object2 isKindOfClass:[STASN1derObject class]]) {
 				STASN1derObject *o = object2;
-				XCTAssertEquals(o.identifier.class, STASN1derIdentifierClassContextSpecific, @"");
-				XCTAssertEquals(o.identifier.constructed, (bool)true, @"");
-				XCTAssertEquals(o.identifier.tag, (enum STASN1derIdentifierTag)0, @"");
+				XCTAssertEqual(o.identifier.class, STASN1derIdentifierClassContextSpecific, @"");
+				XCTAssertEqual(o.identifier.constructed, (bool)true, @"");
+				XCTAssertEqual(o.identifier.tag, (enum STASN1derIdentifierTag)0, @"");
 			}
 		}
 	}
