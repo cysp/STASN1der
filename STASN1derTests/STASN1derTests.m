@@ -378,7 +378,7 @@
 	NSError *error = nil;
 	NSArray * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 	XCTAssertNotNil(output, @"error: %@", error);
-	XCTAssertEqual([output count], 2UL, @"");
+	XCTAssertEqual((unsigned long)[output count], 2UL, @"");
 	if ([output count] == 2) {
 		{
 			id object1 = output[0];
