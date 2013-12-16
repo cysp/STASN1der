@@ -61,15 +61,15 @@ struct __attribute__((packed)) STASN1derIdentifier {
 	enum STASN1derIdentifierClass class : 2;
 };
 
-extern inline struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char const c);
+extern struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char const c);
 
 enum STASN1derIdentifierValidity {
 	STASN1derIdentifierValid = 0,
 	STASN1derIdentifierInvalid = 1,
 	STASN1derIdentifierValidityUnknown = -1,
 };
-extern inline enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN1derIdentifier identifier);
-extern inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier);
+extern enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN1derIdentifier identifier);
+extern bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier);
 
 
 @interface STASN1derObject : NSObject
