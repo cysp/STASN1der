@@ -62,6 +62,7 @@ struct __attribute__((packed)) STASN1derIdentifier {
 };
 
 extern struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char const c);
+extern BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIdentifier b);
 
 enum STASN1derIdentifierValidity {
 	STASN1derIdentifierValid = 0,
@@ -76,6 +77,8 @@ extern bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier);
 @property (nonatomic,assign,readonly) struct STASN1derIdentifier identifier;
 @property (nonatomic,strong,readonly) NSData *content;
 @end
+
+extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 
 
 @interface STASN1derParser : NSObject

@@ -63,7 +63,7 @@
 		2C24D3CC176770000005B30C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C24D3D0176770000005B30C /* STASN1derTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STASN1derTests.m; sourceTree = "<group>"; };
 		2C24D44E176B10A90005B30C /* libSTASN1der.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSTASN1der.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C24D45F176B10A90005B30C /* STASN1derTests.xctest */ = {isa = PBXFileReference; explicitFileType = folder; includeInIndex = 0; path = STASN1derTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C24D45F176B10A90005B30C /* STASN1derTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STASN1derTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C2CCA48176DA76700A58714 /* t */ = {isa = PBXFileReference; lastKnownFileType = folder; path = t; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

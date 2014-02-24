@@ -13,6 +13,20 @@ inline struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char cons
 	return x.b;
 }
 
+BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIdentifier b) {
+    if (a.class != b.class) {
+        return NO;
+    }
+    if (a.constructed != b.constructed) {
+        return NO;
+    }
+    if (a.tag != b.tag) {
+        return NO;
+    }
+    return YES;
+}
+
+
 inline enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN1derIdentifier identifier) {
 	switch (identifier.class) {
 		case STASN1derIdentifierClassPrivate:
@@ -106,6 +120,34 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 	return [NSString stringWithFormat:@"<%@: %p %d.%c.%d %@>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag, _content];
 }
 @end
+
+
+NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
+    uint8_t const * const bytes = data.bytes;
+    size_t const bytesLength = data.length;
+
+    NSUInteger indexes[bytesLength];
+    NSUInteger nIndexes = 0;
+
+    if (bytesLength > 0) {
+        uint8_t const byte = bytes[0];
+        indexes[nIndexes++] = byte / 40;
+        indexes[nIndexes++] = byte % 40;
+    }
+    NSUInteger accumulator = 0;
+    for (NSUInteger i = 1; i < bytesLength; ++i) {
+        uint8_t const byte = bytes[i];
+        accumulator |= byte & 0x7f;
+        if (byte & 0x80) {
+            accumulator <<= 7;
+        } else {
+            indexes[nIndexes++] = accumulator;
+            accumulator = 0;
+        }
+    }
+    NSIndexPath * const indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:nIndexes];
+    return indexPath;
+}
 
 
 @implementation STASN1derParser
