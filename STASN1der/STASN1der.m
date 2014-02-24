@@ -153,9 +153,9 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 		unsigned long content_len = 0;
 		bool content_len_indefinite = false;
 
-		unsigned char content_length_byte = data_bytes[data_i++];
+		uint8_t content_length_byte = data_bytes[data_i++];
 		if (content_length_byte & 0x80) {
-			unsigned char content_length_len = content_length_byte & 0x7f;
+			uint8_t content_length_len = content_length_byte & 0x7f;
 			if (content_length_len == 0) {
 				content_len_indefinite = true;
 			} else {
