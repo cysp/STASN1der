@@ -404,16 +404,16 @@
 }
 
 - (void)testOIDDecode {
-    uint8_t const oidBytes[] = { 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x02 };
-    size_t const nOidBytes = sizeof(oidBytes) / sizeof(oidBytes[0]);
-    NSData * const oidData = [[NSData alloc] initWithBytesNoCopy:(void *)oidBytes length:nOidBytes freeWhenDone:NO];
-    NSIndexPath * const oid = STASN1derObjectIdentifierIndexPathFromData(oidData);
+	uint8_t const oidBytes[] = { 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x02 };
+	size_t const nOidBytes = sizeof(oidBytes) / sizeof(oidBytes[0]);
+	NSData * const oidData = [[NSData alloc] initWithBytesNoCopy:(void *)oidBytes length:nOidBytes freeWhenDone:NO];
+	NSIndexPath * const oid = STASN1derObjectIdentifierIndexPathFromData(oidData);
 
-    NSUInteger const expectedIndexes[] = { 1, 2, 840, 113549, 1, 7, 2 };
-    NSUInteger const nExpectedIndexes = sizeof(expectedIndexes) / sizeof(expectedIndexes[0]);
-    NSIndexPath * const expected = [[NSIndexPath alloc] initWithIndexes:expectedIndexes length:nExpectedIndexes];
+	NSUInteger const expectedIndexes[] = { 1, 2, 840, 113549, 1, 7, 2 };
+	NSUInteger const nExpectedIndexes = sizeof(expectedIndexes) / sizeof(expectedIndexes[0]);
+	NSIndexPath * const expected = [[NSIndexPath alloc] initWithIndexes:expectedIndexes length:nExpectedIndexes];
 
-    XCTAssertEqualObjects(oid, expected, @"");
+	XCTAssertEqualObjects(oid, expected, @"");
 }
 
 @end

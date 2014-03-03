@@ -114,6 +114,7 @@
 				2C24D3B217676FFF0005B30C /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		2C24D3B217676FFF0005B30C /* Products */ = {
 			isa = PBXGroup;

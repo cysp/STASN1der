@@ -14,16 +14,16 @@ inline struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char cons
 }
 
 BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIdentifier b) {
-    if (a.class != b.class) {
-        return NO;
-    }
-    if (a.constructed != b.constructed) {
-        return NO;
-    }
-    if (a.tag != b.tag) {
-        return NO;
-    }
-    return YES;
+	if (a.class != b.class) {
+		return NO;
+	}
+	if (a.constructed != b.constructed) {
+		return NO;
+	}
+	if (a.tag != b.tag) {
+		return NO;
+	}
+	return YES;
 }
 
 
@@ -123,30 +123,30 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 
 
 NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
-    uint8_t const * const bytes = data.bytes;
-    size_t const bytesLength = data.length;
+	uint8_t const * const bytes = data.bytes;
+	size_t const bytesLength = data.length;
 
-    NSUInteger indexes[bytesLength];
-    NSUInteger nIndexes = 0;
+	NSUInteger indexes[bytesLength];
+	NSUInteger nIndexes = 0;
 
-    if (bytesLength > 0) {
-        uint8_t const byte = bytes[0];
-        indexes[nIndexes++] = byte / 40;
-        indexes[nIndexes++] = byte % 40;
-    }
-    NSUInteger accumulator = 0;
-    for (NSUInteger i = 1; i < bytesLength; ++i) {
-        uint8_t const byte = bytes[i];
-        accumulator |= byte & 0x7f;
-        if (byte & 0x80) {
-            accumulator <<= 7;
-        } else {
-            indexes[nIndexes++] = accumulator;
-            accumulator = 0;
-        }
-    }
-    NSIndexPath * const indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:nIndexes];
-    return indexPath;
+	if (bytesLength > 0) {
+		uint8_t const byte = bytes[0];
+		indexes[nIndexes++] = byte / 40;
+		indexes[nIndexes++] = byte % 40;
+	}
+	NSUInteger accumulator = 0;
+	for (NSUInteger i = 1; i < bytesLength; ++i) {
+		uint8_t const byte = bytes[i];
+		accumulator |= byte & 0x7f;
+		if (byte & 0x80) {
+			accumulator <<= 7;
+		} else {
+			indexes[nIndexes++] = accumulator;
+			accumulator = 0;
+		}
+	}
+	NSIndexPath * const indexPath = [[NSIndexPath alloc] initWithIndexes:indexes length:nIndexes];
+	return indexPath;
 }
 
 
