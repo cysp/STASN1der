@@ -9,6 +9,7 @@ typedef NS_ENUM(NSUInteger, STASN1derErrorCode) {
 	STASN1derErrorUnsupported,
 	STASN1derErrorIdentifierInvalid,
 	STASN1derErrorUnexpectedEOD,
+	STASN1derErrorUnexpectedData,
 };
 
 
@@ -71,14 +72,73 @@ enum STASN1derIdentifierValidity {
 };
 extern enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN1derIdentifier identifier);
 extern bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier);
+extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 
 
 @interface STASN1derObject : NSObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content __attribute__((objc_designated_initializer));
 @property (nonatomic,assign,readonly) struct STASN1derIdentifier identifier;
-@property (nonatomic,strong,readonly) NSData *content;
+@property (nonatomic,copy,readonly) NSData *content;
 @end
 
-extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
+@interface STASN1derEOCObject : STASN1derObject
+@end
+
+@interface STASN1derBooleanObject : STASN1derObject
+@property (nonatomic,assign,readonly) BOOL value;
+@end
+
+@interface STASN1derIntegerObject : STASN1derObject
+@property (nonatomic,assign,readonly) long long value;
+@end
+
+@interface STASN1derOctetStringObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSData *value;
+@end
+
+@interface STASN1derNullObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSNull *value;
+@end
+
+@interface STASN1derObjectIdentifierObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSIndexPath *value;
+@end
+
+@interface STASN1derEnumeratedObject : STASN1derObject
+@property (nonatomic,assign,readonly) long long value;
+@end
+
+@interface STASN1derSequenceObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSArray *value;
+@property (nonatomic,assign,readonly) NSUInteger count;
+- (id)objectAtIndex:(NSUInteger)index;
+- (id)objectAtIndexedSubscript:(NSUInteger)index;
+@end
+
+@interface STASN1derSetObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSArray *value;
+@property (nonatomic,assign,readonly) NSUInteger count;
+@end
+
+@interface STASN1derRestrictedCharacterStringObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSString *value;
+@end
+@interface STASN1derUTF8StringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derNumericStringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derPrintableStringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derIA5StringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derVisibleStringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derGeneralStringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derUniversalStringObject : STASN1derRestrictedCharacterStringObject
+@end
+@interface STASN1derBMPStringObject : STASN1derUniversalStringObject
+@end
 
 
 @interface STASN1derParser : NSObject

@@ -101,27 +101,6 @@ inline bool STASN1derIdentifierIsValid(struct STASN1derIdentifier identifier) {
 }
 
 
-@interface STASN1derObject ()
-- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content;
-@end
-@implementation STASN1derObject
-- (id)init {
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
-}
-- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
-	if ((self = [super init])) {
-		_identifier = identifier;
-		_content = [content copy];
-	}
-	return self;
-}
-- (NSString *)description {
-	return [NSString stringWithFormat:@"<%@: %p %d.%c.%d %@>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag, _content];
-}
-@end
-
-
 NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
 	uint8_t const * const bytes = data.bytes;
 	size_t const bytesLength = data.length;
@@ -149,11 +128,383 @@ NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
 	return indexPath;
 }
 
+@class STASN1derPlaceholderObject;
+static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
+@interface STASN1derPlaceholderObject : NSObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content;
+@end
+
+@implementation STASN1derObject
++ (void)initialize {
+	gSTASN1derPlaceholderObject = [STASN1derPlaceholderObject alloc];
+}
++ (id)alloc {
+	if (self == [STASN1derObject class]) {
+		return (id)gSTASN1derPlaceholderObject;
+	}
+	return [super alloc];
+}
++ (id)st_alloc {
+	return [super alloc];
+}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+- (id)init { [self doesNotRecognizeSelector:_cmd]; return nil; }
+#pragma clang diagnostic pop
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if ((self = [super init])) {
+		_identifier = identifier;
+		_content = [content copy];
+	}
+	return self;
+}
+- (NSString *)valueDescription { return nil; }
+- (NSString *)description {
+	return [NSString stringWithFormat:@"<%@: %p %d.%c.%d>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag];
+}
+- (NSString *)debugDescription {
+	NSString * const valueDescription = [self valueDescription];
+	if (valueDescription) {
+		return [NSString stringWithFormat:@"<%@:%p %d.%c.%d [%@]>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag, valueDescription];
+	}
+	return [self description];
+}
+@end
+@implementation STASN1derPlaceholderObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	Class klass = nil;
+
+	if (identifier.class == STASN1derIdentifierClassUniversal) switch (identifier.tag) {
+		case STASN1derIdentifierTagEOC: {
+			klass = [STASN1derEOCObject class];
+		} break;
+		case STASN1derIdentifierTagNULL: {
+			klass = [STASN1derNullObject class];
+		} break;
+		case STASN1derIdentifierTagBOOLEAN: {
+			klass = [STASN1derBooleanObject class];
+		} break;
+		case STASN1derIdentifierTagINTEGER: {
+			klass = [STASN1derIntegerObject class];
+		} break;
+		case STASN1derIdentifierTagENUMERATED: {
+			klass = [STASN1derEnumeratedObject class];
+		} break;
+		case STASN1derIdentifierTagOBJECTIDENTIFIER: {
+			klass = [STASN1derObjectIdentifierObject class];
+		} break;
+		case STASN1derIdentifierTagOCTETSTRING: {
+			klass = [STASN1derOctetStringObject class];
+		} break;
+		case STASN1derIdentifierTagIA5STRING: {
+			klass = [STASN1derIA5StringObject class];
+		} break;
+		case STASN1derIdentifierTagNUMERICSTRING: {
+			klass = [STASN1derNumericStringObject class];
+		} break;
+		case STASN1derIdentifierTagPRINTABLESTRING: {
+			klass = [STASN1derPrintableStringObject class];
+		} break;
+		case STASN1derIdentifierTagVISIBLESTRING: {
+			klass = [STASN1derVisibleStringObject class];
+		} break;
+		case STASN1derIdentifierTagUTF8STRING: {
+			klass = [STASN1derUTF8StringObject class];
+		} break;
+		case STASN1derIdentifierTagUNIVERSALSTRING: {
+			klass = [STASN1derUniversalStringObject class];
+		} break;
+		case STASN1derIdentifierTagBMPSTRING: {
+			klass = [STASN1derBMPStringObject class];
+		} break;
+		case STASN1derIdentifierTagSEQUENCE: {
+			klass = [STASN1derSequenceObject class];
+		} break;
+		case STASN1derIdentifierTagSET: {
+			klass = [STASN1derSetObject class];
+		} break;
+		default: { //TODO
+		} break;
+	}
+	id object = [[klass st_alloc] initWithIdentifier:identifier content:content];
+	if (!object) {
+		object = [[STASN1derObject st_alloc] initWithIdentifier:identifier content:content];
+	}
+	return object;
+}
+@end
+
+
+@implementation STASN1derEOCObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if (content.length != 0) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+	}
+	return self;
+}
+@end
+
+@implementation STASN1derBooleanObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if (content.length != 1) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		uint8_t byte = 0;
+		[content getBytes:&byte length:1];
+		_value = !!byte;
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%d", _value];
+}
+@end
+
+@implementation STASN1derIntegerObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	NSUInteger const content_len = content.length;
+	uint8_t const * const content_bytes = content.bytes;
+	if (content_len == 0) {
+		return nil;
+	}
+	long long value = 0;
+	if (content_len > sizeof(value)) {
+		return nil;
+	}
+	bool const is_negative = content_bytes[0] & 0x80;
+	if (is_negative) {
+		value = -1;
+	}
+	for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
+		value <<= 8;
+		value |= content_bytes[content_i];
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = value;
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%lld", _value];
+}
+@end
+
+@implementation STASN1derOctetStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if (identifier.constructed) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = content;
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%lu bytes", _value.length];
+}
+@end
+
+@implementation STASN1derNullObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if (content.length != 0) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = [NSNull null];
+	}
+	return self;
+}
+@end
+
+
+@implementation STASN1derObjectIdentifierObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = STASN1derObjectIdentifierIndexPathFromData(content);
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	NSString *valueString = nil;
+	NSIndexPath * const value = self.value;
+	if (value) {
+		NSMutableString * const oidContentString = @"".mutableCopy;
+		for (NSUInteger i = 0; i < value.length; ++i) {
+			if (i != 0) {
+				[oidContentString appendString:@"."];
+			}
+			[oidContentString appendFormat:@"%ld", [value indexAtPosition:i]];
+		}
+		valueString = oidContentString;
+	} else {
+		valueString = self.content.description;
+	}
+	return valueString;
+}
+@end
+
+@implementation STASN1derEnumeratedObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	NSUInteger const content_len = content.length;
+	uint8_t const * const content_bytes = content.bytes;
+	if (content_len == 0) {
+		return nil;
+	}
+	long long value = 0;
+	if (content_len > sizeof(value)) {
+		return nil;
+	}
+	bool const is_negative = content_bytes[0] & 0x80;
+	if (is_negative) {
+		value = -1;
+	}
+	for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
+		value <<= 8;
+		value |= content_bytes[content_i];
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = value;
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%lld", _value];
+}
+@end
+
+@implementation STASN1derSequenceObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	NSUInteger const content_len = content.length;
+	void const * const content_bytes = content.bytes;
+	NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
+	NSError *err = nil;
+	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:contentData error:&err];
+	if (!subobjects) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = subobjects.copy;
+	}
+	return self;
+}
+- (NSUInteger)count {
+	return _value.count;
+}
+- (id)objectAtIndex:(NSUInteger)index {
+	return [_value objectAtIndex:index];
+}
+- (id)objectAtIndexedSubscript:(NSUInteger)index {
+	return [_value objectAtIndexedSubscript:index];
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%lu objects", _value.count];
+}
+@end
+
+@implementation STASN1derSetObject : STASN1derObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	NSUInteger const content_len = content.length;
+	void const * const content_bytes = content.bytes;
+	NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
+	NSError *err = nil;
+	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:contentData error:&err];
+	if (!subobjects) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = subobjects.copy;
+	}
+	return self;
+}
+- (NSUInteger)count {
+	return _value.count;
+}
+- (NSString *)valueDescription {
+	return [NSString stringWithFormat:@"%lu objects", _value.count];
+}
+@end
+
+@implementation STASN1derRestrictedCharacterStringObject
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [self initWithIdentifier:identifier content:content encoding:NSUTF8StringEncoding];
+}
+#pragma clang diagnostic pop
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content encoding:(NSStringEncoding)encoding {
+	if (identifier.constructed) {
+		return nil;
+	}
+	NSString * const value = [[NSString alloc] initWithData:content encoding:encoding];
+	if (!value) {
+		return nil;
+	}
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = value;
+	}
+	return self;
+}
+- (NSString *)valueDescription {
+	return _value;
+}
+@end
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+@implementation STASN1derUTF8StringObject
+@end
+
+@implementation STASN1derNumericStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
+}
+@end
+
+@implementation STASN1derPrintableStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
+}
+@end
+
+@implementation STASN1derIA5StringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
+}
+@end
+
+@implementation STASN1derVisibleStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
+}
+@end
+
+@implementation STASN1derGeneralStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
+}
+@end
+
+@implementation STASN1derUniversalStringObject
+@end
+
+@implementation STASN1derBMPStringObject
+@end
+#pragma clang diagnostic pop
+
 
 @implementation STASN1derParser
 
 + (id)objectFromASN1Data:(NSData *)data error:(NSError *__autoreleasing *)error {
 	NSArray * const objects = [self objectsFromASN1Data:data error:error];
+	if (objects.count > 1) {
+		if (error) {
+			*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedData userInfo:nil];
+		}
+		return nil;
+	}
 	return [objects firstObject];
 }
 
@@ -249,105 +600,9 @@ NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
 			return nil;
 		}
 
-		bool handled = false;
-
-		if (identifier.class == STASN1derIdentifierClassUniversal) switch (identifier.tag) {
-			case STASN1derIdentifierTagEOC: {
-				if (content_len == 0) {
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagNULL: {
-				if (content_len == 0) {
-					[objects addObject:[NSNull null]];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagBOOLEAN: {
-				if (content_len == 1) {
-					bool value = content_bytes[0];
-					[objects addObject:@(value)];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagINTEGER:
-			case STASN1derIdentifierTagENUMERATED: {
-				if (content_len > 0) {
-					long long value = 0;
-					if (content_len <= sizeof(value)) {
-						bool const is_negative = content_bytes[0] & 0x80;
-						if (is_negative) {
-							value = -1;
-						}
-						for (unsigned int content_i = 0; content_i < content_len; ++content_i) {
-							value <<= 8;
-							value |= content_bytes[content_i];
-						}
-						[objects addObject:@(value)];
-						handled = true;
-					}
-				}
-			} break;
-
-			case STASN1derIdentifierTagOCTETSTRING: {
-				if (!identifier.constructed) {
-					id object = [[NSData alloc] initWithBytes:content_bytes length:content_len];
-					[objects addObject:object];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagIA5STRING:
-			case STASN1derIdentifierTagNUMERICSTRING:
-			case STASN1derIdentifierTagPRINTABLESTRING:
-			case STASN1derIdentifierTagVISIBLESTRING: {
-				if (!identifier.constructed) {
-					id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSASCIIStringEncoding];
-					[objects addObject:object];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagUTF8STRING: {
-				if (!identifier.constructed) {
-					id object = [[NSString alloc] initWithBytes:content_bytes length:content_len encoding:NSUTF8StringEncoding];
-					[objects addObject:object];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagSEQUENCE: {
-				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
-				NSError *err = nil;
-				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
-				if (subobjects) {
-					[objects addObject:subobjects];
-					handled = true;
-				}
-			} break;
-
-			case STASN1derIdentifierTagSET: {
-				NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
-				NSError *err = nil;
-				NSArray *subobjects = [self objectsFromASN1Data:contentData error:&err];
-				if (subobjects) {
-					[objects addObject:[NSSet setWithArray:subobjects]];
-					handled = true;
-				}
-			} break;
-
-			default: { //TODO
-			} break;
-		}
-
-		if (!handled) {
-			NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
-			id object = [[STASN1derObject alloc] initWithIdentifier:identifier content:contentData];
-			[objects addObject:object];
-		}
+		NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
+		id object = [[STASN1derObject alloc] initWithIdentifier:identifier content:contentData];
+		[objects addObject:object];
 	}
 
 	return objects;

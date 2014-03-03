@@ -68,7 +68,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -79,7 +79,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -90,7 +90,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -101,13 +101,14 @@
 		char input_bytes[] = "\x02\x81\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithInteger:-1];
+		long long const expected = -1;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derIntegerObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derIntegerObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 
@@ -117,7 +118,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -128,7 +129,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -139,7 +140,7 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNil(output, @"error: %@", error);
 		XCTAssertEqual(error.code, (NSInteger)STASN1derErrorUnexpectedEOD, @"");
 	}
@@ -148,13 +149,14 @@
 		char input_bytes[] = "\x02\x82\x00\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithInteger:-1];
+		long long const expected = -1;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derIntegerObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derIntegerObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 
@@ -162,13 +164,19 @@
 		char input_bytes[] = "\x02\x82\x00\x01\xff\x01\x01\x00";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @[ [NSNumber numberWithInteger:-1], @NO ];
+		long long const expected0 = -1;
+		BOOL const expected1 = NO;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectsFromASN1Data:inputData error:&error];
+		NSArray * const output = [STASN1derParser objectsFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			STASN1derIntegerObject * const output0 = output[0];
+			XCTAssert([output0 isKindOfClass:[STASN1derIntegerObject class]], @"");
+			XCTAssertEqual(output0.value, expected0, @"");
+			STASN1derBooleanObject * const output1 = output[1];
+			XCTAssert([output1 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output1.value, expected1, @"");
 		}
 	}
 }
@@ -178,13 +186,12 @@
 		char input_bytes[] = "\x05\x00";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNull null];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derNullObject class]], @"");
 		}
 	}
 }
@@ -194,13 +201,14 @@
 		char input_bytes[] = "\x01\x01\x00";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithBool:0];
+		BOOL const expected = 0;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derBooleanObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 
@@ -208,12 +216,14 @@
 		char input_bytes[] = "\x01\x01\x01";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithBool:1];
+		BOOL const expected = YES;
+
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derBooleanObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 
@@ -221,13 +231,14 @@
 		char input_bytes[] = "\x01\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithBool:1];
+		BOOL const expected = YES;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derBooleanObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 }
@@ -237,13 +248,14 @@
 		char input_bytes[] = "\x02\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithInteger:-1];
+		long long const expected = -1;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derIntegerObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derIntegerObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 
@@ -251,13 +263,14 @@
 		char input_bytes[] = "\x02\x01\xfe";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = [NSNumber numberWithInteger:-2];
+		long long const expected = -2;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derIntegerObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derIntegerObject class]], @"");
+			XCTAssertEqual(output.value, expected, @"");
 		}
 	}
 }
@@ -269,45 +282,48 @@
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
 		char expected_bytes[] = "\x04\x0A\x3B\x5F\x29\x1C\xD0";
 		unsigned long const expected_len = sizeof(expected_bytes) - 1;
-		id const expected = [[NSData alloc] initWithBytesNoCopy:expected_bytes length:expected_len freeWhenDone:NO];
+		NSData * const expected = [[NSData alloc] initWithBytesNoCopy:expected_bytes length:expected_len freeWhenDone:NO];
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derOctetStringObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derOctetStringObject class]], @"");
+			XCTAssertEqualObjects(output.value, expected, @"");
 		}
 	}
 }
 
 - (void)testParseIA5STRING {
 	{
-		char input_bytes[] = "\x0C\x05Hello";
+		char input_bytes[] = "\x16\x05Hello";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @"Hello";
+		NSString * const expected = @"Hello";
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derIA5StringObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derIA5StringObject class]], @"");
+			XCTAssertEqualObjects(output.value, expected, @"");
 		}
 	}
 }
 
 - (void)testParseUTF8STRING {
 	{
-		char input_bytes[] = "\x16\x05Hello";
+		char input_bytes[] = "\x0C\x05Hello";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @"Hello";
+		NSString * const expected = @"Hello";
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derUTF8StringObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derUTF8StringObject class]], @"");
+			XCTAssertEqualObjects(output.value, expected, @"");
 		}
 	}
 }
@@ -317,13 +333,16 @@
 		char input_bytes[] = "\x30\x03\x01\x01\x00";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @[ @NO ];
+		BOOL const expected0 = NO;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derSequenceObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derSequenceObject class]], @"");
+			STASN1derBooleanObject * const output0 = output[0];
+			XCTAssert([output0 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output0.value, expected0, @"");
 		}
 	}
 
@@ -331,13 +350,16 @@
 		char input_bytes[] = "\x30\x03\x01\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @[ @YES ];
+		BOOL const expected0 = YES;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derSequenceObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derSequenceObject class]], @"");
+			STASN1derBooleanObject * const output0 = output[0];
+			XCTAssert([output0 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output0.value, expected0, @"");
 		}
 	}
 
@@ -345,13 +367,20 @@
 		char input_bytes[] = "\x30\x06\x01\x01\x00\x01\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @[ @NO, @YES ];
+		BOOL const expected0 = NO;
+		BOOL const expected1 = YES;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derSequenceObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derSequenceObject class]], @"");
+			STASN1derBooleanObject * const output0 = output[0];
+			XCTAssert([output0 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output0.value, expected0, @"");
+			STASN1derBooleanObject * const output1 = output[1];
+			XCTAssert([output1 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output1.value, expected1, @"");
 		}
 	}
 
@@ -359,13 +388,20 @@
 		char input_bytes[] = "\x30\x0a\x16\x05Smith\x01\x01\xff";
 		unsigned long const input_len = sizeof(input_bytes) - 1;
 		NSData *inputData = [[NSData alloc] initWithBytesNoCopy:input_bytes length:input_len freeWhenDone:NO];
-		id const expected = @[ @"Smith", @YES ];
+		NSString * const expected0 = @"Smith";
+		BOOL const expected1 = YES;
 
 		NSError *error = nil;
-		id const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
+		STASN1derSequenceObject * const output = [STASN1derParser objectFromASN1Data:inputData error:&error];
 		XCTAssertNotNil(output, @"error: %@", error);
 		if (output) {
-			XCTAssertEqualObjects(output, expected, @"");
+			XCTAssert([output isKindOfClass:[STASN1derSequenceObject class]], @"");
+			STASN1derIA5StringObject * const output0 = output[0];
+			XCTAssert([output0 isKindOfClass:[STASN1derIA5StringObject class]], @"");
+			XCTAssertEqualObjects(output0.value, expected0, @"");
+			STASN1derBooleanObject * const output1 = output[1];
+			XCTAssert([output1 isKindOfClass:[STASN1derBooleanObject class]], @"");
+			XCTAssertEqual(output1.value, expected1, @"");
 		}
 	}
 }
