@@ -128,11 +128,14 @@ NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data) {
 	return indexPath;
 }
 
+
+
 @class STASN1derPlaceholderObject;
 static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @interface STASN1derPlaceholderObject : NSObject
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content;
 @end
+
 
 @implementation STASN1derObject
 + (void)initialize {
@@ -170,6 +173,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	return [self description];
 }
 @end
+
 @implementation STASN1derPlaceholderObject
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	Class klass = nil;
@@ -236,6 +240,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 
 
 @implementation STASN1derEOCObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagEOC; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	if (content.length != 0) {
 		return nil;
@@ -247,6 +252,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derBooleanObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagBOOLEAN; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	if (content.length != 1) {
 		return nil;
@@ -264,6 +270,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derIntegerObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagINTEGER; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	NSUInteger const content_len = content.length;
 	uint8_t const * const content_bytes = content.bytes;
@@ -293,6 +300,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derOctetStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagOCTETSTRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	if (identifier.constructed) {
 		return nil;
@@ -308,6 +316,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derNullObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagNULL; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	if (content.length != 0) {
 		return nil;
@@ -321,6 +330,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 
 
 @implementation STASN1derObjectIdentifierObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagOBJECTIDENTIFIER; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	if ((self = [super initWithIdentifier:identifier content:content])) {
 		_value = STASN1derObjectIdentifierIndexPathFromData(content);
@@ -347,6 +357,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derEnumeratedObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagENUMERATED; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	NSUInteger const content_len = content.length;
 	uint8_t const * const content_bytes = content.bytes;
@@ -376,6 +387,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derSequenceObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagSEQUENCE; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	NSUInteger const content_len = content.length;
 	void const * const content_bytes = content.bytes;
@@ -405,6 +417,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 @end
 
 @implementation STASN1derSetObject : STASN1derObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagSET; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	NSUInteger const content_len = content.length;
 	void const * const content_bytes = content.bytes;
@@ -455,42 +468,50 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 @implementation STASN1derUTF8StringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagUTF8STRING; }
 @end
 
 @implementation STASN1derNumericStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagNUMERICSTRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
 }
 @end
 
 @implementation STASN1derPrintableStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagPRINTABLESTRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
 }
 @end
 
 @implementation STASN1derIA5StringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagIA5STRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
 }
 @end
 
 @implementation STASN1derVisibleStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagVISIBLESTRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
 }
 @end
 
 @implementation STASN1derGeneralStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagGENERALSTRING; }
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
 	return [super initWithIdentifier:identifier content:content encoding:NSASCIIStringEncoding];
 }
 @end
 
 @implementation STASN1derUniversalStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagUNIVERSALSTRING; }
 @end
 
 @implementation STASN1derBMPStringObject
++ (enum STASN1derIdentifierTag)universalIdentifierTag { return STASN1derIdentifierTagBMPSTRING; }
 @end
 #pragma clang diagnostic pop
 

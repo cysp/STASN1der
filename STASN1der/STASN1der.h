@@ -145,3 +145,60 @@ extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 + (id)objectFromASN1Data:(NSData *)data error:(NSError * __autoreleasing *)error;
 + (NSArray *)objectsFromASN1Data:(NSData *)data error:(NSError * __autoreleasing *)error;
 @end
+
+
+#pragma mark - STASN1derTemplating
+
+@interface STASN1derTemplateObject : NSObject
+@end
+
+@protocol STASN1derTemplatableObject <NSObject>
++ (STASN1derTemplateObject *)templateObject;
++ (STASN1derTemplateObject *)templateObjectWithContextSpecificIdentifierTag:(enum STASN1derIdentifierTag)identifierTag;
++ (STASN1derTemplateObject *)optionalTemplateObject;
++ (STASN1derTemplateObject *)optionalTemplateObjectWithContextSpecificIdentifierTag:(enum STASN1derIdentifierTag)identifierTag;
+@end
+
+@interface STASN1derExplicitTemplateObject : STASN1derTemplateObject
++ (STASN1derTemplateObject *)templateObjectWithIdentifier:(struct STASN1derIdentifier)identifier template:(STASN1derTemplateObject *)object;
+@end
+
+@interface STASN1derAnyTemplateObject : STASN1derTemplateObject
++ (STASN1derTemplateObject *)templateObject;
+@end
+
+@interface STASN1derChoiceTemplateObject : STASN1derTemplateObject
++ (STASN1derTemplateObject *)templateObjectWithTemplateObjects:(NSArray *)objects;
+@end
+
+@interface STASN1derSequenceObject (STASN1derTemplating)
++ (STASN1derTemplateObject *)templateObjectWithTemplateObjects:(NSArray *)objects;
++ (STASN1derTemplateObject *)templateObjectWithContextSpecificIdentifierTag:(enum STASN1derIdentifierTag)identifierTag templateObjects:(NSArray *)objects;
+@end
+
+@interface STASN1derSetObject (STASN1derTemplating)
++ (STASN1derTemplateObject *)templateObjectWithTemplateObjects:(NSArray *)objects;
++ (STASN1derTemplateObject *)templateObjectWithContextSpecificIdentifierTag:(enum STASN1derIdentifierTag)identifierTag templateObjects:(NSArray *)objects;
+@end
+
+
+@interface STASN1derEOCObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derBooleanObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derIntegerObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derOctetStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derNullObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derObjectIdentifierObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derEnumeratedObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derUTF8StringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derNumericStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derPrintableStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derIA5StringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derVisibleStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derGeneralStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derUniversalStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+@interface STASN1derBMPStringObject (STASN1derTemplating) <STASN1derTemplatableObject> @end
+
+
+@interface STASN1derParser (STASN1derTemplating)
++ (id)parseASN1Data:(NSData *)data withTemplate:(STASN1derTemplateObject *)template error:(NSError * __autoreleasing *)error;
+@end
