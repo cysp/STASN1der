@@ -79,6 +79,7 @@ extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content __attribute__((objc_designated_initializer));
 @property (nonatomic,assign,readonly) struct STASN1derIdentifier identifier;
 @property (nonatomic,copy,readonly) NSData *content;
+@property (nonatomic,copy,readonly) NSData *data;
 @end
 
 @interface STASN1derEOCObject : STASN1derObject

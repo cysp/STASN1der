@@ -12,6 +12,13 @@ inline struct STASN1derIdentifier STASN1derIdentifierFromChar(unsigned char cons
 	} x = { .a = c };
 	return x.b;
 }
+unsigned char STASN1derIdentifierToChar(struct STASN1derIdentifier i) {
+	union {
+		struct STASN1derIdentifier a;
+		unsigned char b;
+	} x = { .a = i };
+	return x.b;
+}
 
 BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIdentifier b) {
 	if (a.class != b.class) {
@@ -24,6 +31,27 @@ BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIden
 		return NO;
 	}
 	return YES;
+}
+
+NSData *STASN1derLengthData(NSUInteger length) {
+	NSUInteger const maxBytes = 8;
+	NSUInteger numBytes = 0;
+	unsigned char bytes[maxBytes];
+
+	if ((length & ~0x7fUL) == 0) {
+		uint8_t lengthByte = length & 0x7f;
+		return [[NSData alloc] initWithBytes:&lengthByte length:1];
+	}
+
+	do {
+		uint8_t lengthByte = length & 0xff;
+		length >>= 8;
+		bytes[maxBytes - numBytes++ - 1] = lengthByte;
+	} while (length);
+	bytes[maxBytes - numBytes - 1] = (uint8_t)(0x80 | numBytes);
+	++numBytes;
+
+	return [[NSData alloc] initWithBytes:bytes + (maxBytes - numBytes) length:numBytes];
 }
 
 
@@ -159,6 +187,20 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 		_content = [content copy];
 	}
 	return self;
+}
+- (NSData *)data {
+	struct STASN1derIdentifier const identifier = self.identifier;
+	NSData * const content = _content;
+	NSUInteger const contentLength = content.length;
+
+	uint8_t const tag = STASN1derIdentifierToChar(identifier);
+	NSData * const lengthData = STASN1derLengthData(contentLength);
+
+	NSMutableData * const data = [[NSMutableData alloc] initWithCapacity:1 + 2 + contentLength];
+	[data appendBytes:&tag length:1];
+	[data appendData:lengthData];
+	[data appendData:content];
+	return data;
 }
 - (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel { return nil; }
 - (NSString *)description {
