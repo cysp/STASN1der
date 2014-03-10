@@ -158,16 +158,21 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription { return nil; }
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel { return nil; }
 - (NSString *)description {
 	return [NSString stringWithFormat:@"<%@: %p %d.%c.%d>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag];
 }
 - (NSString *)debugDescription {
-	NSString * const valueDescription = [self valueDescription];
+	return [self debugDescriptionWithIndentationLevel:0];
+}
+- (NSString *)debugDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	NSMutableString * const debugDescription = [NSMutableString stringWithFormat:@"%*.s<%@:%p %d.%c.%d", (int)indentationLevel, "", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag];
+	NSString * const valueDescription = [self valueDescriptionWithIndentationLevel:indentationLevel];
 	if (valueDescription) {
-		return [NSString stringWithFormat:@"<%@:%p %d.%c.%d [%@]>", NSStringFromClass([self class]), self, _identifier.class, "pc"[_identifier.constructed], _identifier.tag, valueDescription];
+		[debugDescription appendFormat:@" [%@]", valueDescription];
 	}
-	return [self description];
+	[debugDescription appendString:@">"];
+	return debugDescription.copy;
 }
 @end
 @implementation STASN1derPlaceholderObject
@@ -258,7 +263,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	return [NSString stringWithFormat:@"%d", _value];
 }
 @end
@@ -287,7 +292,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	return [NSString stringWithFormat:@"%lld", _value];
 }
 @end
@@ -302,8 +307,24 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
-	return [NSString stringWithFormat:@"%lu bytes", _value.length];
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	NSData * const value = _value;
+	NSUInteger const length = value.length;
+	if (length == 0) {
+		return @"0 bytes";
+	}
+
+	uint8_t bytes[16];
+	[value getBytes:bytes range:(NSRange){ .length = MIN(16UL, length) }];
+
+	NSMutableString * const valueDescription = [NSMutableString stringWithFormat:@"%lu bytes ", length];
+	for (NSUInteger i = 0; i < MIN(16UL, length); ++i) {
+		[valueDescription appendFormat:@"%02x", bytes[i]];
+	}
+	if (length > 16) {
+		[valueDescription appendString:@"…"];
+	}
+	return valueDescription;
 }
 @end
 
@@ -327,7 +348,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	NSString *valueString = nil;
 	NSIndexPath * const value = self.value;
 	if (value) {
@@ -370,7 +391,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	return [NSString stringWithFormat:@"%lld", _value];
 }
 @end
@@ -399,8 +420,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 - (id)objectAtIndexedSubscript:(NSUInteger)index {
 	return [_value objectAtIndexedSubscript:index];
 }
-- (NSString *)valueDescription {
-	return [NSString stringWithFormat:@"%lu objects", _value.count];
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	NSMutableString * const valueDescription = [NSMutableString stringWithFormat:@"%lu objects {\n", _value.count];
+	for (STASN1derObject *object in _value) {
+		[valueDescription appendString:[object debugDescriptionWithIndentationLevel:indentationLevel + 1]];
+		[valueDescription appendString:@"\n"];
+	}
+	[valueDescription appendFormat:@"%*.s}", (int)indentationLevel, ""];
+	return valueDescription.copy;
 }
 @end
 
@@ -422,8 +449,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 - (NSUInteger)count {
 	return _value.count;
 }
-- (NSString *)valueDescription {
-	return [NSString stringWithFormat:@"%lu objects", _value.count];
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	NSMutableString * const valueDescription = [NSMutableString stringWithFormat:@"%lu objects {\n", _value.count];
+	for (STASN1derObject *object in _value) {
+		[valueDescription appendString:[object debugDescriptionWithIndentationLevel:indentationLevel + 1]];
+		[valueDescription appendString:@"\n"];
+	}
+	[valueDescription appendFormat:@"%*.s}", (int)indentationLevel, ""];
+	return valueDescription.copy;
 }
 @end
 
@@ -447,7 +480,7 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	return self;
 }
-- (NSString *)valueDescription {
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	return _value;
 }
 @end
