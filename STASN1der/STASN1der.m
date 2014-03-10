@@ -471,14 +471,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 
 @implementation STASN1derSequenceObject
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
-	NSUInteger const content_len = content.length;
-	void const * const content_bytes = content.bytes;
-	NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
 	NSError *err = nil;
-	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:contentData error:&err];
+	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:content error:&err];
 	if (!subobjects) {
 		return nil;
 	}
+	return [self initWithIdentifier:identifier content:content subobjects:subobjects];
+}
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content subobjects:(NSArray *)subobjects {
 	if ((self = [super initWithIdentifier:identifier content:content])) {
 		_value = subobjects.copy;
 	}
@@ -506,14 +506,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 
 @implementation STASN1derSetObject : STASN1derObject
 - (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
-	NSUInteger const content_len = content.length;
-	void const * const content_bytes = content.bytes;
-	NSData *contentData = [[NSData alloc] initWithBytesNoCopy:(void *)content_bytes length:content_len freeWhenDone:NO];
 	NSError *err = nil;
-	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:contentData error:&err];
+	NSArray *subobjects = [STASN1derParser objectsFromASN1Data:content error:&err];
 	if (!subobjects) {
 		return nil;
 	}
+	return [self initWithIdentifier:identifier content:content subobjects:subobjects];
+}
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content subobjects:(NSArray *)subobjects {
 	if ((self = [super initWithIdentifier:identifier content:content])) {
 		_value = subobjects.copy;
 	}
@@ -623,6 +623,106 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 #pragma clang diagnostic pop
 
 
+@interface STASN1derSimpleSAXParserDelegate : NSObject<STASN1derSAXyParserDelegate>
+@property (nonatomic,copy,readonly) NSArray *objects;
+@end
+@implementation STASN1derSimpleSAXParserDelegate {
+@private
+	NSMutableArray *_objects;
+}
+- (id)init {
+	if ((self = [super init])) {
+		_objects = [[NSMutableArray alloc] init];
+	}
+	return self;
+}
+
+- (void)asn1derSAXyParser:(STASN1derSAXyParser *)parser parsedObjectWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	Class klass = nil;
+	if (identifier.class == STASN1derIdentifierClassUniversal) switch (identifier.tag) {
+		case STASN1derIdentifierTagEOC: {
+			klass = [STASN1derEOCObject class];
+		} break;
+		case STASN1derIdentifierTagNULL: {
+			klass = [STASN1derNullObject class];
+		} break;
+		case STASN1derIdentifierTagBOOLEAN: {
+			klass = [STASN1derBooleanObject class];
+		} break;
+		case STASN1derIdentifierTagINTEGER: {
+			klass = [STASN1derIntegerObject class];
+		} break;
+		case STASN1derIdentifierTagENUMERATED: {
+			klass = [STASN1derEnumeratedObject class];
+		} break;
+		case STASN1derIdentifierTagOBJECTIDENTIFIER: {
+			klass = [STASN1derObjectIdentifierObject class];
+		} break;
+		case STASN1derIdentifierTagBITSTRING: {
+			klass = [STASN1derBitStringObject class];
+		} break;
+		case STASN1derIdentifierTagOCTETSTRING: {
+			klass = [STASN1derOctetStringObject class];
+		} break;
+		case STASN1derIdentifierTagIA5STRING: {
+			klass = [STASN1derIA5StringObject class];
+		} break;
+		case STASN1derIdentifierTagUTCTIME: {
+			klass = [STASN1derUTCTimeObject class];
+		} break;
+		case STASN1derIdentifierTagNUMERICSTRING: {
+			klass = [STASN1derNumericStringObject class];
+		} break;
+		case STASN1derIdentifierTagPRINTABLESTRING: {
+			klass = [STASN1derPrintableStringObject class];
+		} break;
+		case STASN1derIdentifierTagVISIBLESTRING: {
+			klass = [STASN1derVisibleStringObject class];
+		} break;
+		case STASN1derIdentifierTagUTF8STRING: {
+			klass = [STASN1derUTF8StringObject class];
+		} break;
+		case STASN1derIdentifierTagUNIVERSALSTRING: {
+			klass = [STASN1derUniversalStringObject class];
+		} break;
+		case STASN1derIdentifierTagBMPSTRING: {
+			klass = [STASN1derBMPStringObject class];
+		} break;
+		case STASN1derIdentifierTagSEQUENCE: {
+			STASN1derSimpleSAXParserDelegate * const delegate = [[self.class alloc] init];
+			STASN1derSAXyParser * const parser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
+			if ([parser parseData:content error:NULL]) {
+				STASN1derSequenceObject * const sequence = [[STASN1derSequenceObject alloc] initWithIdentifier:identifier content:content subobjects:delegate.objects];
+				if (sequence) {
+					[_objects addObject:sequence];
+					return;
+				}
+			}
+		} break;
+		case STASN1derIdentifierTagSET: {
+			STASN1derSimpleSAXParserDelegate * const delegate = [[self.class alloc] init];
+			STASN1derSAXyParser * const parser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
+			if ([parser parseData:content error:NULL]) {
+				STASN1derSetObject * const sequence = [[STASN1derSetObject alloc] initWithIdentifier:identifier content:content subobjects:delegate.objects];
+				if (sequence) {
+					[_objects addObject:sequence];
+					return;
+				}
+			}
+		} break;
+		default: { //TODO
+		} break;
+	}
+	id object = [[klass st_alloc] initWithIdentifier:identifier content:content];
+	if (!object) {
+		object = [[STASN1derObject st_alloc] initWithIdentifier:identifier content:content];
+	}
+	[_objects addObject:object];
+}
+
+@end
+
+
 @implementation STASN1derParser
 
 + (id)objectFromASN1Data:(NSData *)data error:(NSError *__autoreleasing *)error {
@@ -637,17 +737,43 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 }
 
 + (NSArray *)objectsFromASN1Data:(NSData *)data error:(NSError *__autoreleasing *)error {
+	STASN1derSimpleSAXParserDelegate * const delegate = [[STASN1derSimpleSAXParserDelegate alloc] init];
+	STASN1derSAXyParser * const parser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
+	if (![parser parseData:data error:error]) {
+		return nil;
+	}
+	return delegate.objects;
+}
+
+@end
+
+
+@implementation STASN1derSAXyParser {
+@private
+	id<STASN1derSAXyParserDelegate> __weak _delegate;
+}
+
+- (id)init {
+	return [self initWithDelegate:nil];
+}
+- (id)initWithDelegate:(id<STASN1derSAXyParserDelegate>)delegate {
+	if ((self = [super init])) {
+		_delegate = delegate;
+	}
+	return self;
+}
+
+- (BOOL)parseData:(NSData *)data error:(NSError *__autoreleasing *)error {
+	id<STASN1derSAXyParserDelegate> const delegate = _delegate;
 	NSUInteger data_len = [data length];
 	unsigned char const *data_bytes = [data bytes];
-
-	NSMutableArray * const objects = [[NSMutableArray alloc] init];
 
 	unsigned long data_i = 0;
 	if (data_i >= data_len) {
 		if (error) {
 			*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
 		}
-		return nil;
+		return NO;
 	}
 
 	while (data_i < data_len) {
@@ -661,14 +787,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 				if (error) {
 					*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorIdentifierInvalid userInfo:nil];
 				}
-				return nil;
+				return NO;
 		}
 
 		if (data_i > data_len) {
 			if (error) {
 				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
 			}
-			return nil;
+			return NO;
 		}
 
 		unsigned long content_len = 0;
@@ -684,13 +810,13 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 					if (error) {
 						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnknown userInfo:nil];
 					}
-					return nil;
+					return NO;
 				}
 				if (data_i + content_length_len > data_len) {
 					if (error) {
 						*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
 					}
-					return nil;
+					return NO;
 				}
 				unsigned char const *content_length_bytes = &data_bytes[data_i];
 				data_i += content_length_len;
@@ -708,14 +834,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 			if (error) {
 				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnsupported userInfo:nil];
 			}
-			return nil;
+			return NO;
 		}
 
 		if (data_i > data_len) {
 			if (error) {
 				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
 			}
-			return nil;
+			return NO;
 		}
 
 		unsigned char const *content_bytes = &data_bytes[data_i];
@@ -725,15 +851,14 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 			if (error) {
 				*error = [NSError errorWithDomain:STASN1derErrorDomain code:STASN1derErrorUnexpectedEOD userInfo:nil];
 			}
-			return nil;
+			return NO;
 		}
 
 		NSData *contentData = [[NSData alloc] initWithBytes:content_bytes length:content_len];
-		id object = [[STASN1derObject alloc] initWithIdentifier:identifier content:contentData];
-		[objects addObject:object];
+		[delegate asn1derSAXyParser:self parsedObjectWithIdentifier:identifier content:contentData];
 	}
 
-	return objects;
+	return YES;
 }
 
 @end

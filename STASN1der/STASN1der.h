@@ -155,3 +155,15 @@ extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 + (id)objectFromASN1Data:(NSData *)data error:(NSError * __autoreleasing *)error;
 + (NSArray *)objectsFromASN1Data:(NSData *)data error:(NSError * __autoreleasing *)error;
 @end
+
+
+@class STASN1derSAXyParser;
+
+@protocol STASN1derSAXyParserDelegate <NSObject>
+- (void)asn1derSAXyParser:(STASN1derSAXyParser *)parser parsedObjectWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content;
+@end
+
+@interface STASN1derSAXyParser : NSObject
+- (id)initWithDelegate:(id<STASN1derSAXyParserDelegate>)delegate;
+- (BOOL)parseData:(NSData *)data error:(NSError * __autoreleasing *)error;
+@end
