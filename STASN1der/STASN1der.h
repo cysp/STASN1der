@@ -92,6 +92,11 @@ extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 @property (nonatomic,assign,readonly) long long value;
 @end
 
+@interface STASN1derBitStringObject : STASN1derObject
+@property (nonatomic,assign,readonly) NSUInteger numberOfBits;
+@property (nonatomic,copy,readonly) NSData *value;
+@end
+
 @interface STASN1derOctetStringObject : STASN1derObject
 @property (nonatomic,copy,readonly) NSData *value;
 @end
@@ -118,6 +123,10 @@ extern NSIndexPath *STASN1derObjectIdentifierIndexPathFromData(NSData *data);
 @interface STASN1derSetObject : STASN1derObject
 @property (nonatomic,copy,readonly) NSArray *value;
 @property (nonatomic,assign,readonly) NSUInteger count;
+@end
+
+@interface STASN1derUTCTimeObject : STASN1derObject
+@property (nonatomic,copy,readonly) NSDate *value;
 @end
 
 @interface STASN1derRestrictedCharacterStringObject : STASN1derObject

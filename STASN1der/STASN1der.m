@@ -76,13 +76,15 @@ inline enum STASN1derIdentifierValidity STASN1derIdentifierValidate(struct STASN
 		case STASN1derIdentifierTagSET:
 			return identifier.constructed ? STASN1derIdentifierValid : STASN1derIdentifierInvalid;
 
+		case STASN1derIdentifierTagGENERALIZEDTIME:
+		case STASN1derIdentifierTagUTCTIME:
+			return identifier.constructed ? STASN1derIdentifierInvalid : STASN1derIdentifierValid;
+
 		case STASN1derIdentifierTagNUMERICSTRING:
 		case STASN1derIdentifierTagPRINTABLESTRING:
 		case STASN1derIdentifierTagT61STRING:
 		case STASN1derIdentifierTagVIDEOTEXSTRING:
 		case STASN1derIdentifierTagIA5STRING:
-		case STASN1derIdentifierTagUTCTIME:
-		case STASN1derIdentifierTagGENERALIZEDTIME:
 		case STASN1derIdentifierTagGRAPHICSTRING:
 		case STASN1derIdentifierTagVISIBLESTRING:
 		case STASN1derIdentifierTagGENERALSTRING:
@@ -198,11 +200,17 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 		case STASN1derIdentifierTagOBJECTIDENTIFIER: {
 			klass = [STASN1derObjectIdentifierObject class];
 		} break;
+		case STASN1derIdentifierTagBITSTRING: {
+			klass = [STASN1derBitStringObject class];
+		} break;
 		case STASN1derIdentifierTagOCTETSTRING: {
 			klass = [STASN1derOctetStringObject class];
 		} break;
 		case STASN1derIdentifierTagIA5STRING: {
 			klass = [STASN1derIA5StringObject class];
+		} break;
+		case STASN1derIdentifierTagUTCTIME: {
+			klass = [STASN1derUTCTimeObject class];
 		} break;
 		case STASN1derIdentifierTagNUMERICSTRING: {
 			klass = [STASN1derNumericStringObject class];
@@ -294,6 +302,29 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 }
 - (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
 	return [NSString stringWithFormat:@"%lld", _value];
+}
+@end
+
+@implementation STASN1derBitStringObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	if (identifier.constructed) {
+		return nil;
+	}
+	NSUInteger const content_len = content.length;
+	uint8_t const * const content_bytes = content.bytes;
+	if (content_len < 1) {
+		return nil;
+	}
+	NSUInteger const numberOfUnusedBitsInFinalByte = content_bytes[0];
+	NSUInteger const numberOfBits = (content_len - 1) * 8 - numberOfUnusedBitsInFinalByte;
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_numberOfBits = numberOfBits;
+		_value = [[NSData alloc] initWithBytes:content_bytes + 1 length:content_len - 1];
+	}
+	return self;
+}
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	return [NSString stringWithFormat:@"%lu bits", _numberOfBits];
 }
 @end
 
@@ -457,6 +488,28 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 	}
 	[valueDescription appendFormat:@"%*.s}", (int)indentationLevel, ""];
 	return valueDescription.copy;
+}
+@end
+
+@implementation STASN1derUTCTimeObject
+- (id)initWithIdentifier:(struct STASN1derIdentifier)identifier content:(NSData *)content {
+	NSDateFormatter * const formatter = [[NSDateFormatter alloc] init];
+	formatter.dateFormat = @"yyMMddHHmmss'Z'";
+	formatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+
+	NSString * const utcTimeString = [[NSString alloc] initWithData:content encoding:NSUTF8StringEncoding];
+	NSDate * const value = [formatter dateFromString:utcTimeString];
+	if (!value) {
+		return nil;
+	}
+
+	if ((self = [super initWithIdentifier:identifier content:content])) {
+		_value = value;
+	}
+	return self;
+}
+- (NSString *)valueDescriptionWithIndentationLevel:(NSUInteger)indentationLevel {
+	return [NSString stringWithFormat:@"%@", _value];
 }
 @end
 
