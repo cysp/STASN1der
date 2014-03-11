@@ -34,7 +34,7 @@ BOOL STASN1derIdentifierEqual(struct STASN1derIdentifier a, struct STASN1derIden
 }
 
 NSData *STASN1derLengthData(NSUInteger length) {
-	NSUInteger const maxBytes = 8;
+	NSUInteger const maxBytes = 1 + sizeof(length);
 	NSUInteger numBytes = 0;
 	unsigned char bytes[maxBytes];
 
@@ -690,8 +690,8 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 		} break;
 		case STASN1derIdentifierTagSEQUENCE: {
 			STASN1derSimpleSAXParserDelegate * const delegate = [[self.class alloc] init];
-			STASN1derSAXyParser * const parser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
-			if ([parser parseData:content error:NULL]) {
+			STASN1derSAXyParser * const subparser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
+			if ([subparser parseData:content error:NULL]) {
 				STASN1derSequenceObject * const sequence = [[STASN1derSequenceObject alloc] initWithIdentifier:identifier content:content subobjects:delegate.objects];
 				if (sequence) {
 					[_objects addObject:sequence];
@@ -701,8 +701,8 @@ static STASN1derPlaceholderObject *gSTASN1derPlaceholderObject = nil;
 		} break;
 		case STASN1derIdentifierTagSET: {
 			STASN1derSimpleSAXParserDelegate * const delegate = [[self.class alloc] init];
-			STASN1derSAXyParser * const parser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
-			if ([parser parseData:content error:NULL]) {
+			STASN1derSAXyParser * const subparser = [[STASN1derSAXyParser alloc] initWithDelegate:delegate];
+			if ([subparser parseData:content error:NULL]) {
 				STASN1derSetObject * const sequence = [[STASN1derSetObject alloc] initWithIdentifier:identifier content:content subobjects:delegate.objects];
 				if (sequence) {
 					[_objects addObject:sequence];
